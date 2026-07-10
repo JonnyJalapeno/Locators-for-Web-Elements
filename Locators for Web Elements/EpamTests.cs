@@ -16,6 +16,7 @@ namespace Locators_for_Web_Elements
             options.AddAdditionalOption("useAutomationExtension", false);
             IWebDriver driver = new ChromeDriver(options);
             this.EpamPom = new Epam(driver);
+            this.EpamPom.Driver.Navigate().GoToUrl(EpamPom.WebUrl);
             //Console.WriteLine(EpamPom.WebUrl);
         }
 
@@ -28,6 +29,12 @@ namespace Locators_for_Web_Elements
             EpamPom.SelectCountryFromDropdown("Poland");
             //EpamPom.ClickTheSearchButton();
             Assert.Pass();
+        }
+
+        [TearDown]
+        public void Teardown()
+        {
+            EpamPom.Driver.Quit();
         }
     }
 }
