@@ -50,6 +50,9 @@ namespace Locators_for_Web_Elements
         public By CountryDiv(string country) =>
             By.XPath($"//div[@role='option' and span[normalize-space(.)='{country}']]");
         public By RemoteCheckbox = By.XPath("//fieldset[@aria-labelledby='Workplace type-filter-title']//label[.//span[text()='Remote']]");
+        public By ExpandJobButton = By.XPath("//div[contains(@class, 'JobCard')]//span[@data-testid='accordion-section-header-icon-container']");
+        public By JobDescriptionContainer = By.XPath("//div[@data-testid='categories-container']");
+        public By JobDescriptionParagraphs = By.XPath("//div[@data-testid='rich-text']");
 
         public Epam(IWebDriver driver)
         {
@@ -188,6 +191,21 @@ namespace Locators_for_Web_Elements
             element.Click();
             
             return this;
+        }
+
+        public Epam ExpandJobDescription()
+        {
+            var element = FindElementByLocator(ExpandJobButton);
+            element.Click();
+            
+            return this;
+        }
+
+        public bool JobDescriptionContainsKeyword(string phrase = "")
+        {
+            var container = FindElementByLocator(JobDescriptionContainer);
+            var paragraphs = container.FindElements(JobDescriptionParagraphs);
+            return paragraphs.Any(p => p.Text.Contains(phrase));
         }
     }
 }

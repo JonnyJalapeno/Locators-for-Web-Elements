@@ -29,12 +29,12 @@ namespace Locators_for_Web_Elements
             EpamPom.FindAndClickCareers();
             EpamPom.FindAndClickSearchCareers();
             EpamPom.AcceptCookies();
-            EpamPom.SelectCountryFromDropdown("Serbia");
             EpamPom.FindAndTypeIntoRoleOrKeywordSearch("blockchain");
+            EpamPom.SelectCountryFromDropdown("Serbia");
             EpamPom.ClickRemoteButton();
             EpamPom.ClickTheSearchButton();
-            Thread.Sleep(5000);
-            Assert.Pass();
+            EpamPom.ExpandJobDescription();
+            Assert.That(EpamPom.JobDescriptionContainsKeyword("blockchain"));
         }
 
         [TearDown]
