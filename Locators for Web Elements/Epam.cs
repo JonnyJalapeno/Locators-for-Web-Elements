@@ -40,7 +40,7 @@ namespace Locators_for_Web_Elements
         public By CareerLocator = By.LinkText("Careers"); //LinkText locator
         public By SearchCareersLocator = By.XPath("//div[@data-gtm-category='job_search_redirect']/descendant::a"); //XPath locator with axes
         public By SearchRoleOrKeyword = By.Name("search"); //Name locator
-        public By SearchButton = By.XPath("//button[@name='submit_search_box_button' and @type='submit']"); //XPath locator with operator[and]
+        public By SearchButtonCareerPage = By.XPath("//button[@name='submit_search_box_button' and @type='submit']"); //XPath locator with operator[and]
         //public By CountryDropdownButton = By.CssSelector("input[id*='react-select']"); //CSS locator
         //public By CountryDropdownButton = By.CssSelector("[data-testid='dropdown-value']");
 
@@ -53,6 +53,10 @@ namespace Locators_for_Web_Elements
         public By ExpandJobButton = By.XPath("//div[contains(@class, 'JobCard')]//span[@data-testid='accordion-section-header-icon-container']");
         public By JobDescriptionContainer = By.XPath("//div[@data-testid='categories-container']");
         public By JobDescriptionParagraphs = By.XPath("//div[@data-testid='rich-text']");
+        public By SearchButtonMainPage = By.XPath("//button[contains(@class, 'header-search__button')]");
+        public By SearchInputMainPage = By.Id("new_form_search");
+        public By FindButton = By.XPath("//div[contains(@class, 'search-results__action-section')]//button");
+        public By ArticleLinks = By.XPath("//a[contains(@class,'search-results__title-link')]");
 
         public Epam(IWebDriver driver)
         {
@@ -69,6 +73,26 @@ namespace Locators_for_Web_Elements
                 {
                     var element = driver.FindElement(locator);
                     return element.Displayed && element.Enabled ? element : null;
+                }
+                catch (NoSuchElementException)
+                {
+                    return null;
+                }
+                catch (StaleElementReferenceException)
+                {
+                    return null;
+                }
+            });
+        }
+
+        public IEnumerable<IWebElement> FindElementsByLocator(By locator)
+        {
+            return this.ExplicitWait.Until(driver =>
+            {
+                try
+                {
+                    var elements = driver.FindElements(locator);
+                    return elements.All(d => d.Displayed) && elements.All(d=>d.Enabled) ? elements : null;
                 }
                 catch (NoSuchElementException)
                 {
@@ -167,7 +191,7 @@ namespace Locators_for_Web_Elements
 
         public Epam ClickTheSearchButton()
         {
-            IWebElement searchButton = FindElementByLocator(SearchButton);
+            IWebElement searchButton = FindElementByLocator(SearchButtonCareerPage);
             searchButton.Click();
             return this;
         }
@@ -207,6 +231,36 @@ namespace Locators_for_Web_Elements
             var container = FindElementByLocator(JobDescriptionContainer);
             var paragraphs = container.FindElements(JobDescriptionParagraphs);
             return paragraphs.Any(p => p.Text.Contains(
+                phrase,
+                StringComparison.OrdinalIgnoreCase
+            ));
+        }
+
+        public Epam ClickMagnifierSearch()
+        {
+            var button = FindElementByLocator(SearchButtonMainPage);
+            button.Click();
+            return this;
+        }
+
+        public Epam InputPhraseIntoMagnifierSearch(string phrase = "")
+        {
+            var input = FindElementByLocator(SearchInputMainPage);
+            input.SendKeys(phrase);
+            return this;
+        }
+
+        public Epam ClickFindButton()
+        {
+            var button = FindElementByLocator(FindButton);
+            button.Click();
+            return this;
+        }
+
+        public bool CheckLinksForSearchTerm(string phrase = "")
+        {
+            var links = FindElementsByLocator(ArticleLinks);
+            return links.All(p => p.Text.Contains(
                 phrase,
                 StringComparison.OrdinalIgnoreCase
             ));
