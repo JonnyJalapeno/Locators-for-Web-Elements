@@ -41,9 +41,12 @@ namespace Locators_for_Web_Elements
         public By SearchCareersLocator = By.XPath("//div[@data-gtm-category='job_search_redirect']/descendant::a"); //XPath locator with axes
         public By SearchRoleOrKeyword = By.Name("search"); //Name locator
         public By SearchButton = By.XPath("//button[@name='submit_search_box_button' and @type='submit']"); //XPath locator with operator[and]
-        public By CountryDropdownButton = By.CssSelector("input[id*='react-select']"); //CSS locator
+        //public By CountryDropdownButton = By.CssSelector("input[id*='react-select']"); //CSS locator
+        //public By CountryDropdownButton = By.CssSelector("[data-testid='dropdown-value']");
+
+        public By CountryDropdownButton =
+    By.CssSelector("input[aria-label='Choose your country']");
         public By SelectCountryListbox = By.XPath("//div[@role='listbox']");
-        //public By CountryDiv = By.XPath("//div[contains(@id,'react-select') and .//span]");
         public By CountryDiv(string country) =>
             By.XPath($"//div[@role='option' and span[normalize-space(.)='{country}']]");
         public By RemoteCheckbox = By.XPath("//fieldset[@aria-labelledby='Workplace type-filter-title']//label[.//span[text()='Remote']]");
@@ -62,17 +65,19 @@ namespace Locators_for_Web_Elements
                 try
                 {
                     var element = driver.FindElement(locator);
-
-                    return element.Displayed && element.Enabled
-                        ? element
-                        : null;
+                    return element.Displayed && element.Enabled ? element : null;
                 }
                 catch (NoSuchElementException)
                 {
                     return null;
                 }
+                catch (StaleElementReferenceException)
+                {
+                    return null;
+                }
             });
         }
+
         public void LoadAndInitializeUrl()
         {
             string fileName = "appsettings.json";
@@ -167,11 +172,11 @@ namespace Locators_for_Web_Elements
         {
             var input = FindElementByLocator(CountryDropdownButton);
             input.Click();
-            input.SendKeys(Keys.ArrowDown);
-            var country = this.Driver.FindElement(CountryDiv(countryName));
+            input.SendKeys(countryName);
+            input.SendKeys(Keys.Enter);
+            //var country = this.Driver.FindElement(CountryDiv(countryName));
             //var country = FindElementByLocator(CountryDiv(countryName));
-            country.Click();
-
+            //country.Click();
 
             return this;
         }

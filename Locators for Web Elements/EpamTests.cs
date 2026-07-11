@@ -29,10 +29,11 @@ namespace Locators_for_Web_Elements
             EpamPom.FindAndClickCareers();
             EpamPom.FindAndClickSearchCareers();
             EpamPom.AcceptCookies();
-            //EpamPom.SelectCountryFromDropdown("Poland");
-            EpamPom.FindAndTypeIntoRoleOrKeywordSearch("Java");
+            EpamPom.SelectCountryFromDropdown("Serbia");
+            EpamPom.FindAndTypeIntoRoleOrKeywordSearch("blockchain");
             EpamPom.ClickRemoteButton();
             EpamPom.ClickTheSearchButton();
+            Thread.Sleep(5000);
             Assert.Pass();
         }
 
