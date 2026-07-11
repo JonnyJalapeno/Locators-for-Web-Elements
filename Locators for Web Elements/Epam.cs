@@ -36,6 +36,7 @@ namespace Locators_for_Web_Elements
         • XPath locator with axes
          */
 
+        public By CookiesAcceptanceLocator = By.Id("onetrust-accept-btn-handler");
         public By CareerLocator = By.LinkText("Careers"); //LinkText locator
         public By SearchCareersLocator = By.XPath("//div[@data-gtm-category='job_search_redirect']/descendant::a"); //XPath locator with axes
         public By SearchRoleOrKeyword = By.Name("search"); //Name locator
@@ -44,7 +45,8 @@ namespace Locators_for_Web_Elements
         public By SelectCountryListbox = By.XPath("//div[@role='listbox']");
         //public By CountryDiv = By.XPath("//div[contains(@id,'react-select') and .//span]");
         public By CountryDiv(string country) =>
-    By.XPath($"//div[@role='option' and span[normalize-space(.)='{country}']]");
+            By.XPath($"//div[@role='option' and span[normalize-space(.)='{country}']]");
+        public By RemoteCheckbox = By.XPath("//fieldset[@aria-labelledby='Workplace type-filter-title']//label[.//span[text()='Remote']]");
 
         public Epam(IWebDriver driver)
         {
@@ -90,6 +92,49 @@ namespace Locators_for_Web_Elements
             }
         }
 
+        public void AcceptCookies()
+        {
+            try
+            {
+                var button = ExplicitWait.Until(driver =>
+                {
+                    IWebElement element;
+                    try { element = driver.FindElement(CookiesAcceptanceLocator); }
+                    catch (NoSuchElementException) { return null; }
+
+                    if (!element.Displayed || !element.Enabled) return null;
+
+                    // Confirm it's actually on top / not covered
+                    var js = (IJavaScriptExecutor)driver;
+                    var isClickable = (bool)js.ExecuteScript(@"
+                var rect = arguments[0].getBoundingClientRect();
+                var x = rect.left + rect.width/2, y = rect.top + rect.height/2;
+                var el = document.elementFromPoint(x, y);
+                return arguments[0].contains(el);", element);
+
+                    return isClickable ? element : null;
+                });
+
+                button.Click();
+
+                ExplicitWait.Until(driver =>
+                {
+                    var dialogs = driver.FindElements(
+                        By.CssSelector("div[role='dialog'][aria-label='Privacy']")
+                    );
+
+                    if (dialogs.Count == 0)
+                        return true;
+
+                    return !dialogs[0].Displayed;
+                });
+            }
+            catch (WebDriverTimeoutException)
+            {
+                // Cookie banner not present
+            }
+        }
+
         public Epam FindAndClickCareers()
         {
             IWebElement careers = FindElementByLocator(CareerLocator);
@@ -124,9 +169,19 @@ namespace Locators_for_Web_Elements
             input.Click();
             input.SendKeys(Keys.ArrowDown);
             var country = this.Driver.FindElement(CountryDiv(countryName));
+            //var country = FindElementByLocator(CountryDiv(countryName));
             country.Click();
 
 
+            return this;
+        }
+
+        public Epam ClickRemoteButton()
+        {
+            var element = FindElementByLocator(RemoteCheckbox);
+
+            element.Click();
+            
             return this;
         }
     }

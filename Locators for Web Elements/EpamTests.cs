@@ -12,22 +12,27 @@ namespace Locators_for_Web_Elements
         {
             var options = new ChromeOptions();
             options.AddArgument("--start-maximized");
-            options.AddExcludedArgument("enable-automation");
-            options.AddAdditionalOption("useAutomationExtension", false);
             IWebDriver driver = new ChromeDriver(options);
             this.EpamPom = new Epam(driver);
             this.EpamPom.Driver.Navigate().GoToUrl(EpamPom.WebUrl);
+            this.EpamPom.ExplicitWait.Until(d =>
+            ((IJavaScriptExecutor)d)
+            .ExecuteScript("return document.readyState")
+            .Equals("complete"));
             //Console.WriteLine(EpamPom.WebUrl);
         }
 
         [Test]
         public void Test1()
         {
+            EpamPom.AcceptCookies();
             EpamPom.FindAndClickCareers();
             EpamPom.FindAndClickSearchCareers();
-            //EpamPom.FindAndTypeIntoRoleOrKeywordSearch("Java");
-            EpamPom.SelectCountryFromDropdown("Poland");
-            //EpamPom.ClickTheSearchButton();
+            EpamPom.AcceptCookies();
+            //EpamPom.SelectCountryFromDropdown("Poland");
+            EpamPom.FindAndTypeIntoRoleOrKeywordSearch("Java");
+            EpamPom.ClickRemoteButton();
+            EpamPom.ClickTheSearchButton();
             Assert.Pass();
         }
 
