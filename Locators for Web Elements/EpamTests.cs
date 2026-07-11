@@ -15,26 +15,22 @@ namespace Locators_for_Web_Elements
             IWebDriver driver = new ChromeDriver(options);
             this.EpamPom = new Epam(driver);
             this.EpamPom.Driver.Navigate().GoToUrl(EpamPom.WebUrl);
-            this.EpamPom.ExplicitWait.Until(d =>
-            ((IJavaScriptExecutor)d)
-            .ExecuteScript("return document.readyState")
-            .Equals("complete"));
-            //Console.WriteLine(EpamPom.WebUrl);
         }
 
-        [Test]
-        public void Test1()
+        [TestCase("blockchain", "Serbia")]
+        [TestCase("java", "Poland")]
+        public void Task1(string keyword, string country)
         {
-            EpamPom.AcceptCookies();
-            EpamPom.FindAndClickCareers();
-            EpamPom.FindAndClickSearchCareers();
-            EpamPom.AcceptCookies();
-            EpamPom.FindAndTypeIntoRoleOrKeywordSearch("blockchain");
-            EpamPom.SelectCountryFromDropdown("Serbia");
-            EpamPom.ClickRemoteButton();
-            EpamPom.ClickTheSearchButton();
-            EpamPom.ExpandJobDescription();
-            Assert.That(EpamPom.JobDescriptionContainsKeyword("blockchain"));
+            EpamPom.AcceptCookies()
+            .FindAndClickCareers()
+            .FindAndClickSearchCareers()
+            .AcceptCookies()
+            .FindAndTypeIntoRoleOrKeywordSearch(keyword)
+            .SelectCountryFromDropdown(country)
+            .ClickRemoteButton()
+            .ClickTheSearchButton()
+            .ExpandJobDescription();
+            Assert.That(EpamPom.JobDescriptionContainsKeyword(keyword));
         }
 
         [TearDown]

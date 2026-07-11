@@ -100,7 +100,7 @@ namespace Locators_for_Web_Elements
             }
         }
 
-        public void AcceptCookies()
+        public Epam AcceptCookies()
         {
             try
             {
@@ -141,6 +141,7 @@ namespace Locators_for_Web_Elements
             {
                 // Cookie banner not present
             }
+            return this;
         }
 
         public Epam FindAndClickCareers()
@@ -205,7 +206,10 @@ namespace Locators_for_Web_Elements
         {
             var container = FindElementByLocator(JobDescriptionContainer);
             var paragraphs = container.FindElements(JobDescriptionParagraphs);
-            return paragraphs.Any(p => p.Text.Contains(phrase));
+            return paragraphs.Any(p => p.Text.Contains(
+                phrase,
+                StringComparison.OrdinalIgnoreCase
+            ));
         }
     }
 }
