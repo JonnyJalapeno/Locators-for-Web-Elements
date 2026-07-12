@@ -44,7 +44,8 @@ namespace Locators_for_Web_Elements
 
         public Epam(IWebDriver driver)
         {
-            LoadAndInitializeUrl();
+            EpamConfig config = DeserializeAppSettings();
+            LoadJsonValues(config);
             Driver = driver;
             ExplicitWait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
         }
@@ -115,25 +116,34 @@ namespace Locators_for_Web_Elements
             });
         }
 
-        private IEnumerable<IWebElement> FindElementsByLocator(By locator, IWebElement scope) =>
-        ExplicitWait.Until(driver =>
+        private IEnumerable<IWebElement> FindElementsByLocator(By locator, IWebElement scope)
         {
-            try
+            return ExplicitWait.Until(driver =>
             {
-                var elements = scope.FindElements(locator);
-                return elements.Any() && elements.All(d => d.Displayed) && elements.All(d => d.Enabled) ? elements : null;
-            }
-            catch (StaleElementReferenceException) { return null; }
-        });
+                try
+                {
+                    var elements = scope.FindElements(locator);
+                    return elements.All(d => d.Displayed) && elements.All(d => d.Enabled) ? elements : null;
+                }
+                catch (NoSuchElementException)
+                {
+                    return null;
+                }
+                catch (StaleElementReferenceException)
+                {
+                    return null;
+                }
+            });
+        }
 
-        private void LoadAndInitializeUrl()
+        private EpamConfig DeserializeAppSettings()
         {
             string fileName = "appsettings.json";
             try
             {
                 using FileStream openStream = File.OpenRead(fileName);
                 EpamConfig config = JsonSerializer.Deserialize<EpamConfig>(openStream);
-                WebUrl = config.WebUrl;
+                return config;
             }
             catch (FileNotFoundException ex)
             {
@@ -143,6 +153,11 @@ namespace Locators_for_Web_Elements
             {
                 throw new InvalidOperationException("WebUrl was not set in the config file.", ex);
             }
+        }
+
+        private void LoadJsonValues(EpamConfig config)
+        {
+            WebUrl = config.WebUrl;
         }
 
         //We can't just click accept and wait,
@@ -219,10 +234,7 @@ namespace Locators_for_Web_Elements
         {
             var container = FindElementByLocator(JobDescriptionContainer);
             var paragraphs = container.FindElements(JobDescriptionParagraphs);
-            return paragraphs.Any(p => p.Text.Contains(
-                phrase,
-                StringComparison.OrdinalIgnoreCase
-            ));
+            return paragraphs.Any(p => ElementContainsPhrase(p, phrase));
         }
 
         public Epam ClickMagnifierSearch() => Click(SearchButtonMainPage);
@@ -233,11 +245,18 @@ namespace Locators_for_Web_Elements
 
         public bool CheckLinksForSearchTerm(string phrase = "")
         {
-            var links = FindElementsByLocator(ArticleLinks);
-            return links.All(p => p.Text.Contains(
-                phrase,
-                StringComparison.OrdinalIgnoreCase
-            ));
+            var links = ExplicitWait.Until(driver =>
+            {
+                var container = FindElementByLocator(SearchResultContainer);
+                var links = FindElementsByLocator(ArticleLinks, container).ToList();
+                return links.Count > 0 ? links : null;
+            });
+            return links.All(element => ElementContainsPhrase(element, phrase));
+        }
+
+        private bool ElementContainsPhrase(IWebElement element, string phrase)
+        {
+            return element.Text.Contains(phrase, StringComparison.OrdinalIgnoreCase);
         }
 
         public bool CheckAllLinksForSearchTerm(string phrase = "")
@@ -282,13 +301,14 @@ namespace Locators_for_Web_Elements
                 });
             }
 
-            var links = FindElementByLocator(SearchResultContainer);
-            var elements = links.FindElements(ArticleParagraphs);
+            var links = ExplicitWait.Until(driver =>
+            {
+                var container = FindElementByLocator(SearchResultContainer);
+                var links = FindElementsByLocator(ArticleLinks, container).ToList();
+                return links.Count > 0 ? links : null;
+            });
 
-            return elements.All(p => p.Text.Contains(
-                phrase,
-                StringComparison.OrdinalIgnoreCase
-            ));
+            return links.All(element => ElementContainsPhrase(element,phrase));
         }
     }
 }

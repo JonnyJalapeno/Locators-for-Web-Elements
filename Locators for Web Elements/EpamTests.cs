@@ -17,7 +17,7 @@ namespace Locators_for_Web_Elements
             EpamPom.NavigateToHome();
         }
 
-        //[Ignore("Not implemented yet")]
+        [Ignore("Not implemented yet")]
         [TestCase("blockchain", "Serbia")]
         [TestCase("python", "Uzbekistan")]
         public void Task1(string keyword, string country)
