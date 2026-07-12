@@ -57,13 +57,23 @@ namespace Locators_for_Web_Elements
         public By SearchInputMainPage = By.Id("new_form_search");
         public By FindButton = By.XPath("//div[contains(@class, 'search-results__action-section')]//button");
         public By ArticleLinks = By.XPath("//a[contains(@class,'search-results__title-link')]");
+        public By ArticleParagraphs = By.XPath("//p[contains(@class,'search-results__description')]");
         public By SearchResultContainer = By.XPath("//div[contains(@class, 'search-results__items')]");
+        public By SearchResultMore = By.XPath(
+    "//a[contains(@class,'search-results__view-more') and not(contains(concat(' ', normalize-space(@class), ' '), ' hidden '))]"
+);
 
         public Epam(IWebDriver driver)
         {
             LoadAndInitializeUrl();
             this.Driver = driver;
             this.ExplicitWait = new WebDriverWait(this.Driver, TimeSpan.FromSeconds(10));
+        }
+
+        public IWebElement? TryFindElement(By locator)
+        {
+            var elements = Driver.FindElements(locator);
+            return elements.FirstOrDefault();
         }
 
         public IWebElement FindElementByLocator(By locator)
@@ -260,6 +270,57 @@ namespace Locators_for_Web_Elements
         {
             var links = FindElementsByLocator(ArticleLinks);
             return links.All(p => p.Text.Contains(
+                phrase,
+                StringComparison.OrdinalIgnoreCase
+            ));
+        }
+
+        public bool CheckAllLinksForSearchTerm(string phrase = "")
+        {
+            var footer = Driver.FindElement(By.XPath("//footer[contains(@class,'search-results__footer')]"));
+
+            ((IJavaScriptExecutor)Driver).ExecuteScript(@"
+        const el = arguments[0];
+        const rect = el.getBoundingClientRect();
+        window.scrollTo({
+            top: rect.bottom + window.scrollY - window.innerHeight,
+            behavior: 'instant'
+        });
+    ", footer);
+
+            while (true)
+            {
+                var searchButton = TryFindElement(SearchResultMore);
+
+                if (searchButton == null)
+                {
+                    try
+                    {
+                        ExplicitWait.Until(driver =>
+                            TryFindElement(SearchResultMore) != null
+                        );
+
+                        continue;
+                    }
+                    catch (WebDriverTimeoutException)
+                    {
+                        break;
+                    }
+                }
+
+                searchButton.Click();
+
+                ExplicitWait.Until(driver =>
+                {
+                    var button = TryFindElement(SearchResultMore);
+                    return button == null || button.Displayed;
+                });
+            }
+
+            var links = FindElementByLocator(SearchResultContainer);
+            var elements = links.FindElements(ArticleParagraphs);
+
+            return elements.All(p => p.Text.Contains(
                 phrase,
                 StringComparison.OrdinalIgnoreCase
             ));
