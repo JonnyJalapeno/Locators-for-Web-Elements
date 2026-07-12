@@ -12,7 +12,7 @@ using System.Xml.Linq;
 
 namespace Locators_for_Web_Elements
 {
-    public class Epam
+    public class Task1and2Refactored
     {
         private struct EpamConfig
         {
@@ -22,6 +22,7 @@ namespace Locators_for_Web_Elements
         public IWebDriver Driver { get; init; }
         private WebDriverWait ExplicitWait { get; init; }
 
+        private readonly By PrivacyBanner = By.CssSelector("div[role='dialog'][aria-label='Privacy']");
         private readonly By CookiesAcceptanceLocator = By.Id("onetrust-accept-btn-handler");
         private readonly By CareerLocator = By.LinkText("Careers"); //LinkText locator
         private readonly By SearchCareersLocator = By.XPath("//div[@data-gtm-category='job_search_redirect']/descendant::a"); //XPath locator with axes
@@ -42,7 +43,7 @@ namespace Locators_for_Web_Elements
         private readonly By SearchResultContainer = By.XPath("//div[contains(@class, 'search-results__items')]");
         private readonly By SearchResultMore = By.XPath("//a[contains(@class,'search-results__view-more') and not(contains(concat(' ', normalize-space(@class), ' '), ' hidden '))]");
 
-        public Epam(IWebDriver driver)
+        public Task1and2Refactored(IWebDriver driver)
         {
             EpamConfig config = DeserializeAppSettings();
             LoadJsonValues(config);
@@ -50,7 +51,7 @@ namespace Locators_for_Web_Elements
             ExplicitWait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
         }
 
-        public Epam NavigateToHome()
+        public Task1and2Refactored NavigateToHome()
         {
             Driver.Navigate().GoToUrl(WebUrl);
             return this;
@@ -58,13 +59,13 @@ namespace Locators_for_Web_Elements
 
         public void Quit() => Driver.Quit();
 
-        private Epam Click(By locator)
+        private Task1and2Refactored Click(By locator)
         {
             FindElementByLocator(locator).Click();
             return this;
         }
 
-        private Epam Type(By locator, string text)
+        private Task1and2Refactored Type(By locator, string text)
         {
             FindElementByLocator(locator).SendKeys(text);
             return this;
@@ -163,7 +164,7 @@ namespace Locators_for_Web_Elements
         //We can't just click accept and wait,
         //banner has animation and obscures
         //other elements and intercepting the clicks
-        public Epam AcceptCookies()
+        public Task1and2Refactored AcceptCookies()
         {
             try
             {
@@ -190,9 +191,7 @@ namespace Locators_for_Web_Elements
 
                 ExplicitWait.Until(driver =>
                 {
-                    var dialogs = driver.FindElements(
-                        By.CssSelector("div[role='dialog'][aria-label='Privacy']")
-                    );
+                    var dialogs = driver.FindElements(PrivacyBanner);
 
                     if (dialogs.Count == 0)
                         return true;
@@ -207,15 +206,15 @@ namespace Locators_for_Web_Elements
             return this;
         }
 
-        public Epam ClickCareers() => Click(CareerLocator);
+        public Task1and2Refactored ClickCareers() => Click(CareerLocator);
 
-        public Epam ClickSearchCareers() => Click(SearchCareersLocator);
+        public Task1and2Refactored ClickSearchCareers() => Click(SearchCareersLocator);
 
-        public Epam TypeIntoRoleOrKeywordSearch(string phrase = "") => Type(SearchRoleOrKeyword, phrase);
+        public Task1and2Refactored TypeIntoRoleOrKeywordSearch(string phrase = "") => Type(SearchRoleOrKeyword, phrase);
 
-        public Epam ClickTheSearchButton() => Click(SearchButtonCareerPage);
+        public Task1and2Refactored ClickTheSearchButton() => Click(SearchButtonCareerPage);
 
-        public Epam SelectCountryFromDropdown(string countryName)
+        public Task1and2Refactored SelectCountryFromDropdown(string countryName)
         {
             var input = FindElementByLocator(CountryDropdownButton);
             input.Click();
@@ -226,9 +225,9 @@ namespace Locators_for_Web_Elements
             return this;
         }
 
-        public Epam ClickRemoteButton() => Click(RemoteCheckbox);
+        public Task1and2Refactored ClickRemoteButton() => Click(RemoteCheckbox);
 
-        public Epam ExpandJobDescription() => Click(ExpandJobButton);
+        public Task1and2Refactored ExpandJobDescription() => Click(ExpandJobButton);
 
         public bool JobDescriptionContainsKeyword(string phrase = "")
         {
@@ -237,11 +236,11 @@ namespace Locators_for_Web_Elements
             return paragraphs.Any(p => ElementContainsPhrase(p, phrase));
         }
 
-        public Epam ClickMagnifierSearch() => Click(SearchButtonMainPage);
+        public Task1and2Refactored ClickMagnifierSearch() => Click(SearchButtonMainPage);
 
-        public Epam InputPhraseIntoMagnifierSearch(string phrase = "") => Type(SearchInputMainPage, phrase);
+        public Task1and2Refactored InputPhraseIntoMagnifierSearch(string phrase = "") => Type(SearchInputMainPage, phrase);
 
-        public Epam ClickFindButton() => Click(FindButton);
+        public Task1and2Refactored ClickFindButton() => Click(FindButton);
 
         public bool CheckLinksForSearchTerm(string phrase = "")
         {

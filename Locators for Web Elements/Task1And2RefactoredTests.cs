@@ -3,9 +3,9 @@ using OpenQA.Selenium.Chrome;
 
 namespace Locators_for_Web_Elements
 {
-    public class Tests
+    public class Task1And2RefactoredTests
     {
-        private Epam EpamPom { get; set; }
+        private Task1and2Refactored EpamPom { get; set; }
 
         [SetUp]
         public void Setup()
@@ -13,7 +13,7 @@ namespace Locators_for_Web_Elements
             var options = new ChromeOptions();
             options.AddArgument("--start-maximized");
             IWebDriver driver = new ChromeDriver(options);
-            EpamPom = new Epam(driver);
+            EpamPom = new Task1and2Refactored(driver);
             EpamPom.NavigateToHome();
         }
 
