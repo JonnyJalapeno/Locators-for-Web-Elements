@@ -18,67 +18,66 @@ namespace Locators_for_Web_Elements
         {
             public string WebUrl { get; set; }
         }
-        public string? WebUrl { get; private set; }
+        private string WebUrl { get; set; }
         public IWebDriver Driver { get; init; }
-        public WebDriverWait ExplicitWait { get; init; }
+        private WebDriverWait ExplicitWait { get; init; }
 
-        /*
-         Locators to cover in these tasks:
-        • ID locator
-        • Name locator
-        • ClassName locator
-        • TagName locator
-        • LinkText locator
-        • PartialLinkText locator
-        • CSS locator (if possible, use pseudo-classes)
-        • XPath locator (Relative path)
-        • XPath locator with any operator
-        • XPath locator with axes
-         */
-
-        public By CookiesAcceptanceLocator = By.Id("onetrust-accept-btn-handler");
-        public By CareerLocator = By.LinkText("Careers"); //LinkText locator
-        public By SearchCareersLocator = By.XPath("//div[@data-gtm-category='job_search_redirect']/descendant::a"); //XPath locator with axes
-        public By SearchRoleOrKeyword = By.Name("search"); //Name locator
-        public By SearchButtonCareerPage = By.XPath("//button[@name='submit_search_box_button' and @type='submit']"); //XPath locator with operator[and]
-        //public By CountryDropdownButton = By.CssSelector("input[id*='react-select']"); //CSS locator
-        //public By CountryDropdownButton = By.CssSelector("[data-testid='dropdown-value']");
-
-        public By CountryDropdownButton =
-    By.CssSelector("input[aria-label='Choose your country']");
-        public By SelectCountryListbox = By.XPath("//div[@role='listbox']");
-        private By CountryOption(string country) =>
-    By.XPath($"//div[@role='option' and .//span[normalize-space(.)='{country}']]");
-        public By RemoteCheckbox = By.XPath("//fieldset[@aria-labelledby='Workplace type-filter-title']//label[.//span[text()='Remote']]");
-        public By ExpandJobButton = By.XPath("//div[contains(@class, 'JobCard')]//span[@data-testid='accordion-section-header-icon-container']");
-        public By JobDescriptionContainer = By.XPath("//div[@data-testid='categories-container']");
-        public By JobDescriptionParagraphs = By.XPath("//div[@data-testid='rich-text']");
-        public By SearchButtonMainPage = By.XPath("//button[contains(@class, 'header-search__button')]");
-        public By SearchInputMainPage = By.Id("new_form_search");
-        public By FindButton = By.XPath("//div[contains(@class, 'search-results__action-section')]//button");
-        public By ArticleLinks = By.XPath("//a[contains(@class,'search-results__title-link')]");
-        public By ArticleParagraphs = By.XPath("//p[contains(@class,'search-results__description')]");
-        public By SearchResultContainer = By.XPath("//div[contains(@class, 'search-results__items')]");
-        public By SearchResultMore = By.XPath(
-    "//a[contains(@class,'search-results__view-more') and not(contains(concat(' ', normalize-space(@class), ' '), ' hidden '))]"
-);
+        private readonly By CookiesAcceptanceLocator = By.Id("onetrust-accept-btn-handler");
+        private readonly By CareerLocator = By.LinkText("Careers"); //LinkText locator
+        private readonly By SearchCareersLocator = By.XPath("//div[@data-gtm-category='job_search_redirect']/descendant::a"); //XPath locator with axes
+        private readonly By SearchRoleOrKeyword = By.Name("search"); //Name locator
+        private readonly By SearchButtonCareerPage = By.XPath("//button[@name='submit_search_box_button' and @type='submit']"); //XPath locator with operator[and]
+        private readonly By CountryDropdownButton = By.CssSelector("input[aria-label='Choose your country']");
+        private readonly By SelectCountryListbox = By.XPath("//div[@role='listbox']");
+        private By CountryOption(string country) => By.XPath($"//div[@role='option' and .//span[normalize-space(.)='{country}']]");
+        private readonly By RemoteCheckbox = By.XPath("//fieldset[@aria-labelledby='Workplace type-filter-title']//label[.//span[text()='Remote']]");
+        private readonly By ExpandJobButton = By.XPath("//div[contains(@class, 'JobCard')]//span[@data-testid='accordion-section-header-icon-container']");
+        private readonly By JobDescriptionContainer = By.XPath("//div[@data-testid='categories-container']");
+        private readonly By JobDescriptionParagraphs = By.XPath("//div[@data-testid='rich-text']");
+        private readonly By SearchButtonMainPage = By.XPath("//button[contains(@class, 'header-search__button')]");
+        private readonly By SearchInputMainPage = By.Id("new_form_search");
+        private readonly By FindButton = By.XPath("//div[contains(@class, 'search-results__action-section')]//button");
+        private readonly By ArticleLinks = By.XPath("//a[contains(@class,'search-results__title-link')]");
+        private readonly By ArticleParagraphs = By.XPath("//p[contains(@class,'search-results__description')]");
+        private readonly By SearchResultContainer = By.XPath("//div[contains(@class, 'search-results__items')]");
+        private readonly By SearchResultMore = By.XPath("//a[contains(@class,'search-results__view-more') and not(contains(concat(' ', normalize-space(@class), ' '), ' hidden '))]");
 
         public Epam(IWebDriver driver)
         {
             LoadAndInitializeUrl();
-            this.Driver = driver;
-            this.ExplicitWait = new WebDriverWait(this.Driver, TimeSpan.FromSeconds(10));
+            Driver = driver;
+            ExplicitWait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
         }
 
-        public IWebElement? TryFindElement(By locator)
+        public Epam NavigateToHome()
+        {
+            Driver.Navigate().GoToUrl(WebUrl);
+            return this;
+        }
+
+        public void Quit() => Driver.Quit();
+
+        private Epam Click(By locator)
+        {
+            FindElementByLocator(locator).Click();
+            return this;
+        }
+
+        private Epam Type(By locator, string text)
+        {
+            FindElementByLocator(locator).SendKeys(text);
+            return this;
+        }
+
+        private IWebElement? TryFindElement(By locator)
         {
             var elements = Driver.FindElements(locator);
             return elements.FirstOrDefault();
         }
 
-        public IWebElement FindElementByLocator(By locator)
+        private IWebElement FindElementByLocator(By locator)
         {
-            return this.ExplicitWait.Until(driver =>
+            return ExplicitWait.Until(driver =>
             {
                 try
                 {
@@ -96,9 +95,9 @@ namespace Locators_for_Web_Elements
             });
         }
 
-        public IEnumerable<IWebElement> FindElementsByLocator(By locator)
+        private IEnumerable<IWebElement> FindElementsByLocator(By locator)
         {
-            return this.ExplicitWait.Until(driver =>
+            return ExplicitWait.Until(driver =>
             {
                 try
                 {
@@ -116,25 +115,39 @@ namespace Locators_for_Web_Elements
             });
         }
 
-        public void LoadAndInitializeUrl()
+        private IEnumerable<IWebElement> FindElementsByLocator(By locator, IWebElement scope) =>
+        ExplicitWait.Until(driver =>
+        {
+            try
+            {
+                var elements = scope.FindElements(locator);
+                return elements.Any() && elements.All(d => d.Displayed) && elements.All(d => d.Enabled) ? elements : null;
+            }
+            catch (StaleElementReferenceException) { return null; }
+        });
+
+        private void LoadAndInitializeUrl()
         {
             string fileName = "appsettings.json";
             try
             {
                 using FileStream openStream = File.OpenRead(fileName);
                 EpamConfig config = JsonSerializer.Deserialize<EpamConfig>(openStream);
-                this.WebUrl = config.WebUrl;
+                WebUrl = config.WebUrl;
             }
             catch (FileNotFoundException ex)
             {
-                Console.WriteLine($"File was not found: {ex.FileName}");
+                throw new InvalidOperationException($"Could not load config file '{fileName}'.", ex);
             }
             catch (ArgumentNullException ex)
             {
-                Console.WriteLine($"WebUrl value in json file was not assigned");
+                throw new InvalidOperationException("WebUrl was not set in the config file.", ex);
             }
         }
 
+        //We can't just click accept and wait,
+        //banner has animation and obscures
+        //other elements and intercepting the clicks
         public Epam AcceptCookies()
         {
             try
@@ -150,10 +163,10 @@ namespace Locators_for_Web_Elements
                     // Confirm it's actually on top / not covered
                     var js = (IJavaScriptExecutor)driver;
                     var isClickable = (bool)js.ExecuteScript(@"
-                var rect = arguments[0].getBoundingClientRect();
-                var x = rect.left + rect.width/2, y = rect.top + rect.height/2;
-                var el = document.elementFromPoint(x, y);
-                return arguments[0].contains(el);", element);
+                        var rect = arguments[0].getBoundingClientRect();
+                        var x = rect.left + rect.width/2, y = rect.top + rect.height/2;
+                        var el = document.elementFromPoint(x, y);
+                        return arguments[0].contains(el);", element);
 
                     return isClickable ? element : null;
                 });
@@ -179,33 +192,13 @@ namespace Locators_for_Web_Elements
             return this;
         }
 
-        public Epam FindAndClickCareers()
-        {
-            IWebElement careers = FindElementByLocator(CareerLocator);
-            careers.Click();
-            return this;
-        }
+        public Epam ClickCareers() => Click(CareerLocator);
 
-        public Epam FindAndClickSearchCareers()
-        {
-            IWebElement searchbutton = FindElementByLocator(SearchCareersLocator);
-            searchbutton.Click();
-            return this;
-        }
+        public Epam ClickSearchCareers() => Click(SearchCareersLocator);
 
-        public Epam FindAndTypeIntoRoleOrKeywordSearch(string phrase = "")
-        {
-            IWebElement searchField = FindElementByLocator(SearchRoleOrKeyword);
-            searchField.SendKeys(phrase);
-            return this;
-        }
+        public Epam TypeIntoRoleOrKeywordSearch(string phrase = "") => Type(SearchRoleOrKeyword, phrase);
 
-        public Epam ClickTheSearchButton()
-        {
-            IWebElement searchButton = FindElementByLocator(SearchButtonCareerPage);
-            searchButton.Click();
-            return this;
-        }
+        public Epam ClickTheSearchButton() => Click(SearchButtonCareerPage);
 
         public Epam SelectCountryFromDropdown(string countryName)
         {
@@ -213,27 +206,14 @@ namespace Locators_for_Web_Elements
             input.Click();
             input.SendKeys(countryName + Keys.Enter);
             ExplicitWait.Until(driver =>
-        driver.Url.Contains(countryName, StringComparison.OrdinalIgnoreCase));
+                driver.Url.Contains(countryName, StringComparison.OrdinalIgnoreCase));
 
             return this;
         }
 
-        public Epam ClickRemoteButton()
-        {
-            var element = FindElementByLocator(RemoteCheckbox);
+        public Epam ClickRemoteButton() => Click(RemoteCheckbox);
 
-            element.Click();
-            
-            return this;
-        }
-
-        public Epam ExpandJobDescription()
-        {
-            var element = FindElementByLocator(ExpandJobButton);
-            element.Click();
-            
-            return this;
-        }
+        public Epam ExpandJobDescription() => Click(ExpandJobButton);
 
         public bool JobDescriptionContainsKeyword(string phrase = "")
         {
@@ -245,26 +225,11 @@ namespace Locators_for_Web_Elements
             ));
         }
 
-        public Epam ClickMagnifierSearch()
-        {
-            var button = FindElementByLocator(SearchButtonMainPage);
-            button.Click();
-            return this;
-        }
+        public Epam ClickMagnifierSearch() => Click(SearchButtonMainPage);
 
-        public Epam InputPhraseIntoMagnifierSearch(string phrase = "")
-        {
-            var input = FindElementByLocator(SearchInputMainPage);
-            input.SendKeys(phrase);
-            return this;
-        }
+        public Epam InputPhraseIntoMagnifierSearch(string phrase = "") => Type(SearchInputMainPage, phrase);
 
-        public Epam ClickFindButton()
-        {
-            var button = FindElementByLocator(FindButton);
-            button.Click();
-            return this;
-        }
+        public Epam ClickFindButton() => Click(FindButton);
 
         public bool CheckLinksForSearchTerm(string phrase = "")
         {
@@ -280,13 +245,13 @@ namespace Locators_for_Web_Elements
             var footer = Driver.FindElement(By.XPath("//footer[contains(@class,'search-results__footer')]"));
 
             ((IJavaScriptExecutor)Driver).ExecuteScript(@"
-        const el = arguments[0];
-        const rect = el.getBoundingClientRect();
-        window.scrollTo({
-            top: rect.bottom + window.scrollY - window.innerHeight,
-            behavior: 'instant'
-        });
-    ", footer);
+                const el = arguments[0];
+                const rect = el.getBoundingClientRect();
+                window.scrollTo({
+                    top: rect.bottom + window.scrollY - window.innerHeight,
+                    behavior: 'instant'
+                });
+            ", footer);
 
             while (true)
             {

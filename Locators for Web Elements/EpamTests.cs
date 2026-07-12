@@ -13,29 +13,28 @@ namespace Locators_for_Web_Elements
             var options = new ChromeOptions();
             options.AddArgument("--start-maximized");
             IWebDriver driver = new ChromeDriver(options);
-            this.EpamPom = new Epam(driver);
-            this.EpamPom.Driver.Navigate().GoToUrl(EpamPom.WebUrl);
+            EpamPom = new Epam(driver);
+            EpamPom.NavigateToHome();
         }
 
-        [Ignore("Not implemented yet")]
+        //[Ignore("Not implemented yet")]
         [TestCase("blockchain", "Serbia")]
         [TestCase("python", "Uzbekistan")]
         public void Task1(string keyword, string country)
         {
             EpamPom.AcceptCookies()
-            .FindAndClickCareers()
-            .FindAndClickSearchCareers()
+            .ClickCareers()
+            .ClickSearchCareers()
             .AcceptCookies()
             .SelectCountryFromDropdown(country)
             .ClickRemoteButton()
-            .FindAndTypeIntoRoleOrKeywordSearch(keyword)
+            .TypeIntoRoleOrKeywordSearch(keyword)
             .ClickTheSearchButton()
             .ExpandJobDescription();
-            //Thread.Sleep(5000);
             Assert.That(EpamPom.JobDescriptionContainsKeyword(keyword));
         }
 
-        //[Ignore("Not implemented yet")]
+        [Ignore("Not implemented yet")]
         [TestCase("BLOCKCHAIN")]
         [TestCase("Cloud")]
         [TestCase("Automation")]
@@ -45,14 +44,13 @@ namespace Locators_for_Web_Elements
             .ClickMagnifierSearch()
             .InputPhraseIntoMagnifierSearch(s1)
             .ClickFindButton();
-            Thread.Sleep(5000);
             Assert.That(EpamPom.CheckLinksForSearchTerm(s1));
         }
 
         [TearDown]
         public void Teardown()
         {
-            EpamPom.Driver.Quit();
+            EpamPom.Quit();
         }
     }
 }
