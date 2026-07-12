@@ -19,21 +19,23 @@ namespace Locators_for_Web_Elements
 
         [Ignore("Not implemented yet")]
         [TestCase("blockchain", "Serbia")]
-        [TestCase("java", "Poland")]
+        [TestCase("python", "Uzbekistan")]
         public void Task1(string keyword, string country)
         {
             EpamPom.AcceptCookies()
             .FindAndClickCareers()
             .FindAndClickSearchCareers()
             .AcceptCookies()
-            .FindAndTypeIntoRoleOrKeywordSearch(keyword)
             .SelectCountryFromDropdown(country)
             .ClickRemoteButton()
+            .FindAndTypeIntoRoleOrKeywordSearch(keyword)
             .ClickTheSearchButton()
             .ExpandJobDescription();
+            //Thread.Sleep(5000);
             Assert.That(EpamPom.JobDescriptionContainsKeyword(keyword));
         }
 
+        //[Ignore("Not implemented yet")]
         [TestCase("BLOCKCHAIN")]
         [TestCase("Cloud")]
         [TestCase("Automation")]
@@ -43,6 +45,7 @@ namespace Locators_for_Web_Elements
             .ClickMagnifierSearch()
             .InputPhraseIntoMagnifierSearch(s1)
             .ClickFindButton();
+            Thread.Sleep(5000);
             Assert.That(EpamPom.CheckLinksForSearchTerm(s1));
         }
 

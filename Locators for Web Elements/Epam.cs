@@ -47,8 +47,8 @@ namespace Locators_for_Web_Elements
         public By CountryDropdownButton =
     By.CssSelector("input[aria-label='Choose your country']");
         public By SelectCountryListbox = By.XPath("//div[@role='listbox']");
-        public By CountryDiv(string country) =>
-            By.XPath($"//div[@role='option' and span[normalize-space(.)='{country}']]");
+        private By CountryOption(string country) =>
+    By.XPath($"//div[@role='option' and .//span[normalize-space(.)='{country}']]");
         public By RemoteCheckbox = By.XPath("//fieldset[@aria-labelledby='Workplace type-filter-title']//label[.//span[text()='Remote']]");
         public By ExpandJobButton = By.XPath("//div[contains(@class, 'JobCard')]//span[@data-testid='accordion-section-header-icon-container']");
         public By JobDescriptionContainer = By.XPath("//div[@data-testid='categories-container']");
@@ -57,6 +57,7 @@ namespace Locators_for_Web_Elements
         public By SearchInputMainPage = By.Id("new_form_search");
         public By FindButton = By.XPath("//div[contains(@class, 'search-results__action-section')]//button");
         public By ArticleLinks = By.XPath("//a[contains(@class,'search-results__title-link')]");
+        public By SearchResultContainer = By.XPath("//div[contains(@class, 'search-results__items')]");
 
         public Epam(IWebDriver driver)
         {
@@ -200,11 +201,9 @@ namespace Locators_for_Web_Elements
         {
             var input = FindElementByLocator(CountryDropdownButton);
             input.Click();
-            input.SendKeys(countryName);
-            input.SendKeys(Keys.Enter);
-            //var country = this.Driver.FindElement(CountryDiv(countryName));
-            //var country = FindElementByLocator(CountryDiv(countryName));
-            //country.Click();
+            input.SendKeys(countryName + Keys.Enter);
+            ExplicitWait.Until(driver =>
+        driver.Url.Contains(countryName, StringComparison.OrdinalIgnoreCase));
 
             return this;
         }
