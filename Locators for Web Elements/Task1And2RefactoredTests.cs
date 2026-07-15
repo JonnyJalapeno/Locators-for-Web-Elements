@@ -34,17 +34,17 @@ namespace Locators_for_Web_Elements
             Assert.That(EpamPom.JobDescriptionContainsKeyword(keyword));
         }
 
-        [Ignore("Not implemented yet")]
+        //[Ignore("Not implemented yet")]
         [TestCase("BLOCKCHAIN")]
-        [TestCase("Cloud")]
-        [TestCase("Automation")]
+        //[TestCase("Cloud")]
+        //[TestCase("Automation")]
         public void Task2(string s1)
         {
             EpamPom.AcceptCookies()
             .ClickMagnifierSearch()
             .InputPhraseIntoMagnifierSearch(s1)
             .ClickFindButton();
-            Assert.That(EpamPom.CheckLinksForSearchTerm(s1));
+            Assert.That(EpamPom.CheckAllLinksForSearchTerm(s1));
         }
 
         [TearDown]

@@ -29,8 +29,6 @@ namespace Locators_for_Web_Elements
         private readonly By SearchRoleOrKeyword = By.Name("search"); //Name locator
         private readonly By SearchButtonCareerPage = By.XPath("//button[@name='submit_search_box_button' and @type='submit']"); //XPath locator with operator[and]
         private readonly By CountryDropdownButton = By.CssSelector("input[aria-label='Choose your country']");
-        private readonly By SelectCountryListbox = By.XPath("//div[@role='listbox']");
-        private By CountryOption(string country) => By.XPath($"//div[@role='option' and .//span[normalize-space(.)='{country}']]");
         private readonly By RemoteCheckbox = By.XPath("//fieldset[@aria-labelledby='Workplace type-filter-title']//label[.//span[text()='Remote']]");
         private readonly By ExpandJobButton = By.XPath("//div[contains(@class, 'JobCard')]//span[@data-testid='accordion-section-header-icon-container']");
         private readonly By JobDescriptionContainer = By.XPath("//div[@data-testid='categories-container']");
@@ -38,10 +36,12 @@ namespace Locators_for_Web_Elements
         private readonly By SearchButtonMainPage = By.XPath("//button[contains(@class, 'header-search__button')]");
         private readonly By SearchInputMainPage = By.Id("new_form_search");
         private readonly By FindButton = By.XPath("//div[contains(@class, 'search-results__action-section')]//button");
-        private readonly By ArticleLinks = By.XPath("//a[contains(@class,'search-results__title-link')]");
-        private readonly By ArticleParagraphs = By.XPath("//p[contains(@class,'search-results__description')]");
+        private readonly By ArticleLinks = By.TagName("a");
+        private readonly By ArticleParagraphs = By.TagName("p");
         private readonly By SearchResultContainer = By.XPath("//div[contains(@class, 'search-results__items')]");
         private readonly By SearchResultMore = By.XPath("//a[contains(@class,'search-results__view-more') and not(contains(concat(' ', normalize-space(@class), ' '), ' hidden '))]");
+        private readonly By Footer = By.XPath("//footer[contains(@class,'search-results__footer')]");
+        private readonly By Article = By.XPath("//article[contains(@class, 'search-results__item')]");
 
         public Task1and2Refactored(IWebDriver driver)
         {
@@ -67,6 +67,7 @@ namespace Locators_for_Web_Elements
 
         private Task1and2Refactored Type(By locator, string text)
         {
+            ArgumentNullException.ThrowIfNullOrWhiteSpace(text);
             FindElementByLocator(locator).SendKeys(text);
             return this;
         }
@@ -210,12 +211,13 @@ namespace Locators_for_Web_Elements
 
         public Task1and2Refactored ClickSearchCareers() => Click(SearchCareersLocator);
 
-        public Task1and2Refactored TypeIntoRoleOrKeywordSearch(string phrase = "") => Type(SearchRoleOrKeyword, phrase);
+        public Task1and2Refactored TypeIntoRoleOrKeywordSearch(string phrase) => Type(SearchRoleOrKeyword, phrase);
 
         public Task1and2Refactored ClickTheSearchButton() => Click(SearchButtonCareerPage);
 
         public Task1and2Refactored SelectCountryFromDropdown(string countryName)
         {
+            ArgumentNullException.ThrowIfNullOrWhiteSpace(countryName);
             var input = FindElementByLocator(CountryDropdownButton);
             input.Click();
             input.SendKeys(countryName + Keys.Enter);
@@ -229,8 +231,9 @@ namespace Locators_for_Web_Elements
 
         public Task1and2Refactored ExpandJobDescription() => Click(ExpandJobButton);
 
-        public bool JobDescriptionContainsKeyword(string phrase = "")
+        public bool JobDescriptionContainsKeyword(string phrase)
         {
+            ArgumentNullException.ThrowIfNullOrWhiteSpace(phrase);
             var container = FindElementByLocator(JobDescriptionContainer);
             var paragraphs = container.FindElements(JobDescriptionParagraphs);
             return paragraphs.Any(p => ElementContainsPhrase(p, phrase));
@@ -238,12 +241,13 @@ namespace Locators_for_Web_Elements
 
         public Task1and2Refactored ClickMagnifierSearch() => Click(SearchButtonMainPage);
 
-        public Task1and2Refactored InputPhraseIntoMagnifierSearch(string phrase = "") => Type(SearchInputMainPage, phrase);
+        public Task1and2Refactored InputPhraseIntoMagnifierSearch(string phrase) => Type(SearchInputMainPage, phrase);
 
         public Task1and2Refactored ClickFindButton() => Click(FindButton);
 
-        public bool CheckLinksForSearchTerm(string phrase = "")
+        public bool CheckLinksForSearchTerm(string phrase)
         {
+            ArgumentNullException.ThrowIfNullOrWhiteSpace(phrase);
             var links = ExplicitWait.Until(driver =>
             {
                 var container = FindElementByLocator(SearchResultContainer);
@@ -253,61 +257,34 @@ namespace Locators_for_Web_Elements
             return links.All(element => ElementContainsPhrase(element, phrase));
         }
 
-        private bool ElementContainsPhrase(IWebElement element, string phrase)
+        private static bool ElementContainsPhrase(IWebElement element, string phrase)
         {
             return element.Text.Contains(phrase, StringComparison.OrdinalIgnoreCase);
         }
 
-        public bool CheckAllLinksForSearchTerm(string phrase = "")
+        public bool CheckAllLinksForSearchTerm(string phrase)
         {
-            var footer = Driver.FindElement(By.XPath("//footer[contains(@class,'search-results__footer')]"));
+            ArgumentNullException.ThrowIfNullOrWhiteSpace(phrase);
+            var footer = Driver.FindElement(Footer);
 
-            ((IJavaScriptExecutor)Driver).ExecuteScript(@"
-                const el = arguments[0];
-                const rect = el.getBoundingClientRect();
-                window.scrollTo({
-                    top: rect.bottom + window.scrollY - window.innerHeight,
-                    behavior: 'instant'
-                });
-            ", footer);
+            new Actions(Driver).ScrollToElement(footer).Perform();
 
-            while (true)
-            {
-                var searchButton = TryFindElement(SearchResultMore);
+            Click(SearchResultMore);
 
-                if (searchButton == null)
-                {
-                    try
-                    {
-                        ExplicitWait.Until(driver =>
-                            TryFindElement(SearchResultMore) != null
-                        );
-
-                        continue;
-                    }
-                    catch (WebDriverTimeoutException)
-                    {
-                        break;
-                    }
-                }
-
-                searchButton.Click();
-
-                ExplicitWait.Until(driver =>
-                {
-                    var button = TryFindElement(SearchResultMore);
-                    return button == null || button.Displayed;
-                });
-            }
-
-            var links = ExplicitWait.Until(driver =>
+            var articles = ExplicitWait.Until(driver =>
             {
                 var container = FindElementByLocator(SearchResultContainer);
-                var links = FindElementsByLocator(ArticleLinks, container).ToList();
-                return links.Count > 0 ? links : null;
+                var articles = FindElementsByLocator(Article, container).ToList();
+                return articles.Count > 0 ? articles : null;
             });
 
-            return links.All(element => ElementContainsPhrase(element,phrase));
+            return articles.All(element =>
+            {
+                var linkText = element.FindElement(ArticleLinks);
+                var paragraphText = element.FindElement(ArticleParagraphs);
+                return ElementContainsPhrase(linkText,phrase) || ElementContainsPhrase(paragraphText, phrase);
+            }
+            );
         }
     }
 }
