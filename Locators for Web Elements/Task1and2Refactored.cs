@@ -59,13 +59,13 @@ namespace Locators_for_Web_Elements
 
         public void Quit() => Driver.Quit();
 
-        private Task1and2Refactored Click(By locator)
+        private Task1and2Refactored FindAndClick(By locator)
         {
             FindElementByLocator(locator).Click();
             return this;
         }
 
-        private Task1and2Refactored Type(By locator, string text)
+        private Task1and2Refactored FindAndType(By locator, string text)
         {
             ArgumentNullException.ThrowIfNullOrWhiteSpace(text);
             FindElementByLocator(locator).SendKeys(text);
@@ -207,13 +207,13 @@ namespace Locators_for_Web_Elements
             return this;
         }
 
-        public Task1and2Refactored ClickCareers() => Click(CareerLocator);
+        public Task1and2Refactored ClickCareers() => FindAndClick(CareerLocator);
 
-        public Task1and2Refactored ClickSearchCareers() => Click(SearchCareersLocator);
+        public Task1and2Refactored ClickSearchCareers() => FindAndClick(SearchCareersLocator);
 
-        public Task1and2Refactored TypeIntoRoleOrKeywordSearch(string phrase) => Type(SearchRoleOrKeyword, phrase);
+        public Task1and2Refactored TypeIntoRoleOrKeywordSearch(string phrase) => FindAndType(SearchRoleOrKeyword, phrase);
 
-        public Task1and2Refactored ClickTheSearchButton() => Click(SearchButtonCareerPage);
+        public Task1and2Refactored ClickTheSearchButton() => FindAndClick(SearchButtonCareerPage);
 
         public Task1and2Refactored SelectCountryFromDropdown(string countryName)
         {
@@ -221,15 +221,20 @@ namespace Locators_for_Web_Elements
             var input = FindElementByLocator(CountryDropdownButton);
             input.Click();
             input.SendKeys(countryName + Keys.Enter);
-            ExplicitWait.Until(driver =>
-                driver.Url.Contains(countryName, StringComparison.OrdinalIgnoreCase));
+            WaitForUrlToContain(countryName);
 
             return this;
         }
 
-        public Task1and2Refactored ClickRemoteButton() => Click(RemoteCheckbox);
+        private void WaitForUrlToContain(string phrase)
+        {
+            ExplicitWait.Until(driver =>
+                driver.Url.Contains(phrase, StringComparison.OrdinalIgnoreCase));
+        }
 
-        public Task1and2Refactored ExpandJobDescription() => Click(ExpandJobButton);
+        public Task1and2Refactored ClickRemoteButton() => FindAndClick(RemoteCheckbox);
+
+        public Task1and2Refactored ExpandJobDescription() => FindAndClick(ExpandJobButton);
 
         public bool JobDescriptionContainsKeyword(string phrase)
         {
@@ -239,11 +244,11 @@ namespace Locators_for_Web_Elements
             return paragraphs.Any(p => ElementContainsPhrase(p, phrase));
         }
 
-        public Task1and2Refactored ClickMagnifierSearch() => Click(SearchButtonMainPage);
+        public Task1and2Refactored ClickMagnifierSearch() => FindAndClick(SearchButtonMainPage);
 
-        public Task1and2Refactored InputPhraseIntoMagnifierSearch(string phrase) => Type(SearchInputMainPage, phrase);
+        public Task1and2Refactored InputPhraseIntoMagnifierSearch(string phrase) => FindAndType(SearchInputMainPage, phrase);
 
-        public Task1and2Refactored ClickFindButton() => Click(FindButton);
+        public Task1and2Refactored ClickFindButton() => FindAndClick(FindButton);
 
         public bool CheckLinksForSearchTerm(string phrase)
         {
@@ -269,22 +274,33 @@ namespace Locators_for_Web_Elements
 
             new Actions(Driver).ScrollToElement(footer).Perform();
 
-            Click(SearchResultMore);
+            Driver.FindElement(SearchResultMore).Click();
 
-            var articles = ExplicitWait.Until(driver =>
+            var articles = FetchArticles();
+
+            return AllArticlesContainPhrase(articles, phrase);
+        }
+
+        private List<IWebElement> FetchArticles()
+        { 
+            return ExplicitWait.Until(driver =>
             {
                 var container = FindElementByLocator(SearchResultContainer);
                 var articles = FindElementsByLocator(Article, container).ToList();
                 return articles.Count > 0 ? articles : null;
             });
+        }
 
+        private bool AllArticlesContainPhrase(IEnumerable<IWebElement> articles, string phrase)
+        {
             return articles.All(element =>
             {
                 var linkText = element.FindElement(ArticleLinks);
                 var paragraphText = element.FindElement(ArticleParagraphs);
-                return ElementContainsPhrase(linkText,phrase) || ElementContainsPhrase(paragraphText, phrase);
-            }
-            );
+
+                return ElementContainsPhrase(linkText, phrase) ||
+                       ElementContainsPhrase(paragraphText, phrase);
+            });
         }
     }
 }

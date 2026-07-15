@@ -17,9 +17,9 @@ namespace Locators_for_Web_Elements
             EpamPom.NavigateToHome();
         }
 
-        [Ignore("Not implemented yet")]
+        //[Ignore("Not implemented yet")]
         [TestCase("blockchain", "Serbia")]
-        [TestCase("python", "Uzbekistan")]
+        //[TestCase("python", "Uzbekistan")]
         public void Task1(string keyword, string country)
         {
             EpamPom.AcceptCookies()
@@ -34,7 +34,7 @@ namespace Locators_for_Web_Elements
             Assert.That(EpamPom.JobDescriptionContainsKeyword(keyword));
         }
 
-        //[Ignore("Not implemented yet")]
+        [Ignore("Not implemented yet")]
         [TestCase("BLOCKCHAIN")]
         //[TestCase("Cloud")]
         //[TestCase("Automation")]
