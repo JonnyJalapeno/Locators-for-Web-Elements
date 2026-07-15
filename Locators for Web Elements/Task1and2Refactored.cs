@@ -1,14 +1,7 @@
 ﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics.Metrics;
-using System.Text;
 using System.Text.Json;
-using System.Xml.Linq;
 
 namespace Locators_for_Web_Elements
 {
@@ -49,6 +42,29 @@ namespace Locators_for_Web_Elements
             LoadJsonValues(config);
             Driver = driver;
             ExplicitWait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
+        }
+
+        private void LoadJsonValues(EpamConfig config)
+        {
+            WebUrl = config.WebUrl;
+        }
+        private static EpamConfig DeserializeAppSettings()
+        {
+            string fileName = "appsettings.json";
+            try
+            {
+                using FileStream openStream = File.OpenRead(fileName);
+                EpamConfig config = JsonSerializer.Deserialize<EpamConfig>(openStream);
+                return config;
+            }
+            catch (FileNotFoundException ex)
+            {
+                throw new InvalidOperationException($"Could not load config file '{fileName}'.", ex);
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new InvalidOperationException("WebUrl was not set in the config file.", ex);
+            }
         }
 
         public Task1and2Refactored NavigateToHome()
@@ -138,29 +154,6 @@ namespace Locators_for_Web_Elements
             });
         }
 
-        private EpamConfig DeserializeAppSettings()
-        {
-            string fileName = "appsettings.json";
-            try
-            {
-                using FileStream openStream = File.OpenRead(fileName);
-                EpamConfig config = JsonSerializer.Deserialize<EpamConfig>(openStream);
-                return config;
-            }
-            catch (FileNotFoundException ex)
-            {
-                throw new InvalidOperationException($"Could not load config file '{fileName}'.", ex);
-            }
-            catch (ArgumentNullException ex)
-            {
-                throw new InvalidOperationException("WebUrl was not set in the config file.", ex);
-            }
-        }
-
-        private void LoadJsonValues(EpamConfig config)
-        {
-            WebUrl = config.WebUrl;
-        }
 
         //We can't just click accept and wait,
         //banner has animation and obscures
