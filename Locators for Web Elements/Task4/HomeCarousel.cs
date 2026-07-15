@@ -26,20 +26,30 @@ namespace EpamTests.PageObjects.Components
         // Action — drags the active slide horizontally to trigger a swipe
         public HomeCarousel Swipe(int times = 1)
         {
-            const int stepOffset = -25;   // per-step distance (negative = drag left = next slide)
-            const int stepCount = 4;      // ~100px total, in 4 discrete moves
+            const int stepOffset = -25;
+            const int stepCount = 4;
 
             for (int i = 0; i < times; i++)
             {
                 var titleBefore = GetActiveSlideTitle();
                 var slideArea = Root.FindElement(_activeSlide);
 
-                var actions = new Actions(_driver).MoveToElement(slideArea).ClickAndHold();
+                var actions = new Actions(_driver)
+                    .MoveToElement(slideArea)
+                    .Pause(TimeSpan.FromMilliseconds(100)) // let the hover/position register before mousedown
+                    .ClickAndHold()
+                    .Pause(TimeSpan.FromMilliseconds(100)); // dwell after mousedown before the drag starts moving
+
                 for (int s = 0; s < stepCount; s++)
                 {
-                    actions = actions.MoveByOffset(stepOffset, 0).Pause(TimeSpan.FromMilliseconds(50));
+                    actions = actions.MoveByOffset(stepOffset, 0).Pause(TimeSpan.FromMilliseconds(80));
                 }
-                actions.Release().Build().Perform();
+
+                actions
+                    .Pause(TimeSpan.FromMilliseconds(100)) // dwell at the end position before releasing
+                    .Release()
+                    .Build()
+                    .Perform();
 
                 _wait.Until(d => GetActiveSlideTitle() != titleBefore);
                 WaitForCarouselToSettle();
