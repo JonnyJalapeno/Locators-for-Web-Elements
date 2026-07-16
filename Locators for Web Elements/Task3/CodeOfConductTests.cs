@@ -1,13 +1,14 @@
-﻿using Locators_for_Web_Elements;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
 
 namespace Locators_for_Web_Elements
 {
-    public class Task3and4Tests
+    public class CodeOfConductTests
     {
-        private Task3and4 EpamPom { get; set; }
+        private HomePage HomePage { get; set; }
         private string _downloadDirectory;
+        private IWebDriver Driver { get; set; }
 
         [SetUp]
         public void SetUp()
@@ -23,29 +24,20 @@ namespace Locators_for_Web_Elements
             options.AddUserProfilePreference("download.open_pdf_in_system_reader", true);
             options.AddUserProfilePreference("plugins.always_open_pdf_externally", true);
 
-            IWebDriver driver = new ChromeDriver(options);
-            EpamPom = new Task3and4(driver, _downloadDirectory); // pass it here
-            EpamPom.NavigateToHome();
+            Driver = new ChromeDriver(options);
+            WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
+            HomePage = new HomePage(Driver, wait);
+            HomePage.NavigateToHome();
         }
 
         [Test]
         public async Task CodeOfEthicalConductPdf_DownloadsWithExpectedFileName()
         {
-            EpamPom.AcceptCookies();
-            EpamPom.ClickCodeofEthicalConduct();
-            Console.WriteLine($"Download dir exists: {Directory.Exists(_downloadDirectory)}");
-            if (Directory.Exists(_downloadDirectory))
-            {
-                var files = Directory.GetFiles(_downloadDirectory);
-                Console.WriteLine($"Files in download dir ({files.Length}):");
-                foreach (var f in files) Console.WriteLine($"  {f}");
-            }
+            var page = HomePage.AcceptCookies()
+            .ClickCodeOfConduct();
+            page.SetCDPValues(_downloadDirectory);
 
-            // Ask Chrome itself what it thinks downloaded, via chrome://downloads internals
-            ((IJavaScriptExecutor)EpamPom.Driver).ExecuteScript(
-                "window.open('chrome://downloads/', '_blank');");
-
-            bool downloaded = await Task3and4.ValidateFileDownloadedAsync(
+            bool downloaded = await CodeOfConduct.ValidateFileDownloadedAsync(
                 _downloadDirectory, "Code-Of-Conduct_01_26.pdf");
 
             Assert.That(downloaded, Is.True, "Expected PDF was not downloaded within the timeout.");
@@ -54,7 +46,8 @@ namespace Locators_for_Web_Elements
         [TearDown]
         public void TearDown()
         {
-            EpamPom.Quit();
+            Driver.Quit();
+            Driver.Dispose();
         }
     }
 }

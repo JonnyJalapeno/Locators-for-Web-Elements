@@ -1,22 +1,19 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
-using EpamTests.PageObjects.Components;
 
-namespace EpamTests.PageObjects
+namespace Locators_for_Web_Elements
 {
-    public class ArticlePage
+    public class ArticlePage : BaseComponent<ArticlePage>
     {
-        private readonly WebDriverWait _wait;
         private readonly By _heading = By.CssSelector("h1"); // verify once on real article page
 
-        public ArticlePage(IWebDriver driver, WebDriverWait wait)
+        public ArticlePage(IWebDriver driver, WebDriverWait wait) : base(driver, wait)
         {
-            _wait = wait;
         }
 
         public string GetTitle()
         {
-            var el = _wait.Until(d => d.FindElement(_heading));
+            var el = Wait.Until(d => d.FindElement(_heading));
             return HomeCarousel.NormalizeText(el.Text);
         }
     }

@@ -1,14 +1,15 @@
-﻿using OpenQA.Selenium;
+﻿
+
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 
 namespace Locators_for_Web_Elements
 {
-    [TestFixture]
-    public class CarouselArticleTitleTests
+    public class SearchPageTests
     {
-        private HomePage HomePage { get; set; }
         private IWebDriver Driver { get; set; }
+        private HomePage HomePage { get; set; }
 
         [SetUp]
         public void Setup()
@@ -21,25 +22,23 @@ namespace Locators_for_Web_Elements
             HomePage.NavigateToHome();
         }
 
-        [Test]
-        public void ArticleTitle_MatchesCarouselSlideTitle_AfterSwiping()
+        [TestCase("BLOCKCHAIN")]
+        //[TestCase("Cloud")]
+        //[TestCase("Automation")]
+        public void Task2(string s1)
         {
-            var insightPage = HomePage.AcceptCookies().ClickInsights();
-
-            insightPage.Carousel.Swipe(2);
-            var expectedTitle = insightPage.Carousel.GetActiveSlideTitle();
-
-            var actualTitle = insightPage.Carousel.ClickReadMoreOnActiveSlide().GetTitle();
-
-            Assert.That(actualTitle, Is.EqualTo(expectedTitle));
+            var page = HomePage.AcceptCookies()
+            .ClickMagnifierSearch()
+            .InputPhraseIntoMagnifierSearch(s1)
+            .ClickFindButton();
+            Assert.That(page.CheckAllLinksForSearchTerm(s1));
         }
 
         [TearDown]
-        public void TearDown()
+        public void Teardown()
         {
             Driver.Quit();
             Driver.Dispose();
         }
-
     }
 }

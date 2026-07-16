@@ -1,27 +1,22 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
-using System;
 
-namespace EpamTests.PageObjects.Components
+namespace Locators_for_Web_Elements
 {
-    public class HomeCarousel
+    public class HomeCarousel : BaseComponent<HomeCarousel>
     {
-        private readonly IWebDriver _driver;
-        private readonly WebDriverWait _wait;
 
         private readonly By _root = By.XPath("//div[contains(@class,'slider') and contains(@class,'section')]");
         private readonly By _activeSlide = By.XPath(".//div[contains(@class,'owl-item') and contains(@class,'active')]//div[contains(@class,'single-slide-ui')]");
         private readonly By _titleParagraph = By.XPath(".//div[contains(@class, 'single-slide__content-container')]");
         private readonly By _readMoreLink = By.XPath(".//a[contains(@class,'slider-cta-link')]");
 
-        public HomeCarousel(IWebDriver driver, WebDriverWait wait)
+        public HomeCarousel(IWebDriver driver, WebDriverWait wait) :  base(driver, wait)
         {
-            _driver = driver;
-            _wait = wait;
         }
 
-        private IWebElement Root => _wait.Until(d => d.FindElement(_root));
+        private IWebElement Root => Wait.Until(d => d.FindElement(_root));
 
         // Action — drags the active slide horizontally to trigger a swipe
         public HomeCarousel Swipe(int times = 1)
@@ -34,7 +29,7 @@ namespace EpamTests.PageObjects.Components
                 var titleBefore = GetActiveSlideTitle();
                 var slideArea = Root.FindElement(_activeSlide);
 
-                var actions = new Actions(_driver)
+                var actions = new Actions(Driver)
                     .MoveToElement(slideArea)
                     .Pause(TimeSpan.FromMilliseconds(100)) // let the hover/position register before mousedown
                     .ClickAndHold()
@@ -51,7 +46,7 @@ namespace EpamTests.PageObjects.Components
                     .Build()
                     .Perform();
 
-                _wait.Until(d => GetActiveSlideTitle() != titleBefore);
+                Wait.Until(d => GetActiveSlideTitle() != titleBefore);
                 WaitForCarouselToSettle();
             }
             return this;
@@ -59,7 +54,7 @@ namespace EpamTests.PageObjects.Components
 
         private void WaitForCarouselToSettle()
         {
-            _wait.Until(d =>
+            Wait.Until(d =>
             {
                 var stage = Root.FindElement(By.CssSelector(".owl-stage"));
                 var styleBefore = stage.GetAttribute("style");
@@ -77,10 +72,11 @@ namespace EpamTests.PageObjects.Components
         }
 
         // Action
-        public void ClickReadMoreOnActiveSlide()
+        public ArticlePage ClickReadMoreOnActiveSlide()
         {
             var link = Root.FindElement(_activeSlide).FindElement(_readMoreLink);
-            _wait.Until(_driver=> { return link.Enabled ? link : null; }).Click();
+            Wait.Until(_driver=> { return link.Enabled ? link : null; }).Click();
+            return new ArticlePage(Driver, Wait);
         }
 
         public static string NormalizeText(string text) =>

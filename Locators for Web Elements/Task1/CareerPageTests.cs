@@ -4,9 +4,9 @@ using OpenQA.Selenium.Support.UI;
 
 namespace Locators_for_Web_Elements
 {
-    [TestFixture]
-    public class CarouselArticleTitleTests
+    public class CareerPageTests
     {
+
         private HomePage HomePage { get; set; }
         private IWebDriver Driver { get; set; }
 
@@ -21,17 +21,20 @@ namespace Locators_for_Web_Elements
             HomePage.NavigateToHome();
         }
 
-        [Test]
-        public void ArticleTitle_MatchesCarouselSlideTitle_AfterSwiping()
+        [TestCase("blockchain", "Serbia")]
+        //[TestCase("python", "Uzbekistan")]
+        public void Task1(string keyword, string country)
         {
-            var insightPage = HomePage.AcceptCookies().ClickInsights();
-
-            insightPage.Carousel.Swipe(2);
-            var expectedTitle = insightPage.Carousel.GetActiveSlideTitle();
-
-            var actualTitle = insightPage.Carousel.ClickReadMoreOnActiveSlide().GetTitle();
-
-            Assert.That(actualTitle, Is.EqualTo(expectedTitle));
+            var page = HomePage.AcceptCookies()
+            .ClickCareers()
+            .ClickSearchCareers()
+            .AcceptCookies()
+            .SelectCountryFromDropdown(country)
+            .ClickRemoteButton()
+            .TypeIntoRoleOrKeywordSearch(keyword)
+            .ClickTheSearchButton()
+            .ExpandJobDescription();
+            Assert.That(page.JobDescriptionContainsKeyword(keyword));
         }
 
         [TearDown]
@@ -40,6 +43,5 @@ namespace Locators_for_Web_Elements
             Driver.Quit();
             Driver.Dispose();
         }
-
     }
 }

@@ -85,12 +85,6 @@ namespace Locators_for_Web_Elements
             WebUrl = config.WebUrl;
         }
 
-        private IWebElement? TryFindElement(By locator)
-        {
-            var elements = Driver.FindElements(locator);
-            return elements.FirstOrDefault();
-        }
-
         private IWebElement FindElementByLocator(By locator)
         {
             return ExplicitWait.Until(driver =>
@@ -99,20 +93,6 @@ namespace Locators_for_Web_Elements
                 {
                     var element = driver.FindElement(locator);
                     return element.Displayed && element.Enabled ? element : null;
-                }
-                catch (NoSuchElementException) { return null; }
-                catch (StaleElementReferenceException) { return null; }
-            });
-        }
-
-        private IEnumerable<IWebElement> FindElementsByLocator(By locator)
-        {
-            return ExplicitWait.Until(driver =>
-            {
-                try
-                {
-                    var elements = driver.FindElements(locator);
-                    return elements.All(d => d.Displayed) && elements.All(d => d.Enabled) ? elements : null;
                 }
                 catch (NoSuchElementException) { return null; }
                 catch (StaleElementReferenceException) { return null; }
