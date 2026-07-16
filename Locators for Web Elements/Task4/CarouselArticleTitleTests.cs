@@ -1,37 +1,50 @@
-﻿using NUnit.Framework;
+﻿using EpamTests.PageObjects;
+using EpamTests.PageObjects.Components;
+using Locators_for_Web_Elements.Shared_Classes;
+using Microsoft.Extensions.DependencyInjection;
+using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using System;
-using EpamTests.PageObjects;
 
 namespace EpamTests.Tests
 {
     [TestFixture]
     public class CarouselArticleTitleTests
     {
-        private IWebDriver _driver;
-        private WebDriverWait _wait;
+        private ServiceProvider _provider;
 
         [SetUp]
         public void SetUp()
         {
-            _driver = new ChromeDriver();
-            _driver.Manage().Window.Maximize();
-            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
+            var services = new ServiceCollection();
+            services.AddScoped<IWebDriver>(_ =>
+            {
+                var driver = new ChromeDriver();
+                driver.Manage().Window.Maximize();
+                return driver;
+            });
+            services.AddScoped(sp => new WebDriverWait(sp.GetRequiredService<IWebDriver>(), TimeSpan.FromSeconds(15)));
+            services.AddScoped<HomePage>();
+            services.AddScoped<HomeCarousel>();
+            services.AddScoped<ArticlePage>();
+            services.AddScoped<IPageFactory, PageFactory>();
+            _provider = services.BuildServiceProvider();
         }
 
         [Test]
         public void ArticleTitle_MatchesCarouselSlideTitle_AfterSwiping()
         {
-            var home = new HomePage(_driver, _wait).GoTo().AcceptCookies().SelectInsights();
+            var homePage = _provider.GetRequiredService<HomePage>();
+            var carousel = homePage.GoTo().AcceptCookies().SelectInsights();
 
-            home.Carousel.Swipe(2);
-            var expectedTitle = home.Carousel.GetActiveSlideTitle();
+            carousel.Swipe(2);
+            var expectedTitle = carousel.GetActiveSlideTitle();
 
-            home.Carousel.ClickReadMoreOnActiveSlide();
+            carousel.ClickReadMoreOnActiveSlide();
 
-            var actualTitle = new ArticlePage(_driver, _wait).GetTitle();
+            var actualTitle = _provider.GetRequiredService<ArticlePage>().GetTitle();
 
             Assert.That(actualTitle, Is.EqualTo(expectedTitle));
         }
@@ -39,9 +52,8 @@ namespace EpamTests.Tests
         [TearDown]
         public void TearDown()
         {
-            _driver?.Quit();
-            _driver.Dispose();
+            _provider.GetRequiredService<IWebDriver>().Quit();
+            _provider.Dispose();
         }
-
     }
 }

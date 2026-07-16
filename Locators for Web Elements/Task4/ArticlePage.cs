@@ -8,9 +8,11 @@ namespace EpamTests.PageObjects
     {
         private readonly WebDriverWait _wait;
         private readonly By _heading = By.CssSelector("h1"); // verify once on real article page
+        private readonly IWebDriver _driver;
 
         public ArticlePage(IWebDriver driver, WebDriverWait wait)
         {
+            _driver = driver;
             _wait = wait;
         }
 

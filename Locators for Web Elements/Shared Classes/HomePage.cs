@@ -1,5 +1,6 @@
 ﻿using EpamTests.PageObjects.Components;
 using Locators_for_Web_Elements;
+using Locators_for_Web_Elements.Shared_Classes;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 
@@ -13,13 +14,15 @@ namespace EpamTests.PageObjects
         private readonly By PrivacyBanner = By.CssSelector("div[role='dialog'][aria-label='Privacy']");
         private readonly By CookiesAcceptanceLocator = By.Id("onetrust-accept-btn-handler");
 
+        private readonly IPageFactory _pages;
+
         public HomeCarousel Carousel { get; }
 
-        public HomePage(IWebDriver driver, WebDriverWait wait)
+        public HomePage(IWebDriver driver, WebDriverWait wait, IPageFactory pages)
         {
             _driver = driver;
             _wait = wait;
-            Carousel = new HomeCarousel(driver, wait);
+            _pages = pages;
         }
 
         public HomePage GoTo()
@@ -28,7 +31,7 @@ namespace EpamTests.PageObjects
             return this;
         }
 
-        public HomePage SelectInsights()
+        public HomeCarousel SelectInsights()
         {
             var insightsLink = _wait.Until(d =>
                 d.FindElements(_insightsMenuItem).FirstOrDefault(e => e.Displayed && e.Enabled));
@@ -37,7 +40,7 @@ namespace EpamTests.PageObjects
                 throw new NoSuchElementException("No visible 'Insights' nav link found.");
 
             insightsLink.Click();
-            return this;
+            return _pages.CreateInsightsPage();
         }
 
         public HomePage AcceptCookies()
