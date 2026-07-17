@@ -1,24 +1,25 @@
 ﻿
 
+using Microsoft.Extensions.DependencyInjection;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Support.UI;
 
 namespace Locators_for_Web_Elements
 {
     public class SearchPageTests
     {
+        private ServiceProvider Services { get; set; }
         private IWebDriver Driver { get; set; }
         private HomePage HomePage { get; set; }
 
         [SetUp]
         public void Setup()
         {
-            var options = new ChromeOptions();
-            options.AddArgument("--start-maximized");
-            Driver = new ChromeDriver(options);
-            WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
-            HomePage = new HomePage(Driver, wait);
+            Services = new ServiceCollection()
+                .AddSeleniumTestServices(ConfigurationFactory.Build())
+                .BuildServiceProvider();
+
+            Driver = Services.GetRequiredService<IWebDriver>();
+            HomePage = Services.GetRequiredService<HomePage>();
             HomePage.NavigateToHome();
         }
 
@@ -39,6 +40,7 @@ namespace Locators_for_Web_Elements
         {
             Driver.Quit();
             Driver.Dispose();
+            Services.Dispose();
         }
     }
 }

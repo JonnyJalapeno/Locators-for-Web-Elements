@@ -7,9 +7,10 @@ namespace Locators_for_Web_Elements
     {
         public HomeCarousel Carousel { get; }
 
-        public InsightsPage(IWebDriver driver, WebDriverWait wait) : base(driver, wait)
+        public InsightsPage(IWebDriver driver, WebDriverWait wait, IPageFactory pageFactory, HomeCarousel carousel)
+            : base(driver, wait, pageFactory)
         {
-            Carousel = new HomeCarousel(driver, wait);
+            Carousel = carousel;
         }
     }
 }

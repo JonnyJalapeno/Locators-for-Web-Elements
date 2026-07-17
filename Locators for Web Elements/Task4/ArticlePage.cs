@@ -7,7 +7,8 @@ namespace Locators_for_Web_Elements
     {
         private readonly By _heading = By.CssSelector("h1"); // verify once on real article page
 
-        public ArticlePage(IWebDriver driver, WebDriverWait wait) : base(driver, wait)
+        public ArticlePage(IWebDriver driver, WebDriverWait wait, IPageFactory pageFactory)
+            : base(driver, wait, pageFactory)
         {
         }
 

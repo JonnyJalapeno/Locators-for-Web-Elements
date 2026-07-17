@@ -23,7 +23,8 @@ namespace Locators_for_Web_Elements
         private readonly By JobDescriptionParagraphs = 
             By.XPath("//div[@data-testid='rich-text']");
 
-        public CareerPage(IWebDriver driver, WebDriverWait wait) : base(driver, wait)
+        public CareerPage(IWebDriver driver, WebDriverWait wait, IPageFactory pageFactory)
+            : base(driver, wait, pageFactory)
         {
         }
 

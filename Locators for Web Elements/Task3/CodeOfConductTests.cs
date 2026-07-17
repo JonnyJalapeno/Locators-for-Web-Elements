@@ -1,11 +1,12 @@
-﻿using OpenQA.Selenium;
+﻿using Microsoft.Extensions.DependencyInjection;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Support.UI;
 
 namespace Locators_for_Web_Elements
 {
     public class CodeOfConductTests
     {
+        private ServiceProvider Services { get; set; }
         private HomePage HomePage { get; set; }
         private string _downloadDirectory;
         private IWebDriver Driver { get; set; }
@@ -46,9 +47,8 @@ namespace Locators_for_Web_Elements
             return false;
         }
 
-        public void BrowserOptionsSetUp(ChromeOptions options, string downloadDirectory)
+        private static void BrowserOptionsSetUp(ChromeOptions options, string downloadDirectory)
         {
-            options.AddArgument("--start-maximized");
             options.AddUserProfilePreference("download.default_directory", downloadDirectory);
             options.AddUserProfilePreference("download.prompt_for_download", false);
             options.AddUserProfilePreference("download.directory_upgrade", true);
@@ -73,12 +73,14 @@ namespace Locators_for_Web_Elements
             AssignDownloadFolder("TestDownloads");
             CreateDownloadFolder(_downloadDirectory);
 
-            var options = new ChromeOptions();
-            BrowserOptionsSetUp(options, _downloadDirectory);
+            Services = new ServiceCollection()
+                .AddSeleniumTestServices(
+                    ConfigurationFactory.Build(),
+                    options => BrowserOptionsSetUp(options, _downloadDirectory))
+                .BuildServiceProvider();
 
-            Driver = new ChromeDriver(options);
-            WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
-            HomePage = new HomePage(Driver, wait);
+            Driver = Services.GetRequiredService<IWebDriver>();
+            HomePage = Services.GetRequiredService<HomePage>();
             HomePage.NavigateToHome();
         }
 
@@ -99,6 +101,7 @@ namespace Locators_for_Web_Elements
         {
             Driver.Quit();
             Driver.Dispose();
+            Services.Dispose();
         }
     }
 }

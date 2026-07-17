@@ -12,7 +12,8 @@ namespace Locators_for_Web_Elements
         private readonly By _titleParagraph = By.XPath(".//div[contains(@class, 'single-slide__content-container')]");
         private readonly By _readMoreLink = By.XPath(".//a[contains(@class,'slider-cta-link')]");
 
-        public HomeCarousel(IWebDriver driver, WebDriverWait wait) :  base(driver, wait)
+        public HomeCarousel(IWebDriver driver, WebDriverWait wait, IPageFactory pageFactory)
+            : base(driver, wait, pageFactory)
         {
         }
 
@@ -73,7 +74,7 @@ namespace Locators_for_Web_Elements
         {
             var link = Root.FindElement(_activeSlide).FindElement(_readMoreLink);
             Wait.Until(_driver=> { return link.Enabled ? link : null; }).Click();
-            return new ArticlePage(Driver, Wait);
+            return PageFactory.Create<ArticlePage>();
         }
 
         public static string NormalizeText(string text) =>

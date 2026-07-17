@@ -1,6 +1,7 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
+using Microsoft.Extensions.Options;
 
 
 namespace Locators_for_Web_Elements
@@ -17,9 +18,15 @@ namespace Locators_for_Web_Elements
         private readonly By CodeOfConductLink =
             By.XPath("//a[contains(normalize-space(.), 'Ethical Conduct')]");
 
-        public HomePage(IWebDriver driver, WebDriverWait wait) : base(driver, wait)
+        public HomePage(IWebDriver driver, WebDriverWait wait, IPageFactory pageFactory, IOptions<EpamConfig> config)
+            : base(driver, wait, pageFactory)
         {
-            WebUrl = AppsettingsLoader.GetWebUrl();
+            WebUrl = config.Value.WebUrl;
+
+            if (string.IsNullOrWhiteSpace(WebUrl))
+            {
+                throw new InvalidOperationException("WebUrl was not set in the config file.");
+            }
         }
 
         public HomePage NavigateToHome()

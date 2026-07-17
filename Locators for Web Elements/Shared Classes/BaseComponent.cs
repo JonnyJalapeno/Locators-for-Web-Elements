@@ -7,14 +7,16 @@ namespace Locators_for_Web_Elements
     {
         protected readonly IWebDriver Driver;
         protected readonly WebDriverWait Wait;
+        protected readonly IPageFactory PageFactory;
 
         private readonly By PrivacyBanner = By.CssSelector("div[role='dialog'][aria-label='Privacy']");
         private readonly By CookiesAcceptanceLocator = By.Id("onetrust-accept-btn-handler");
 
-        protected BaseComponent(IWebDriver driver, WebDriverWait wait)
+        protected BaseComponent(IWebDriver driver, WebDriverWait wait, IPageFactory pageFactory)
         {
             Driver = driver;
             Wait = wait;
+            PageFactory = pageFactory;
         }
 
         protected TSelf FindAndClick(By locator)
@@ -28,7 +30,7 @@ namespace Locators_for_Web_Elements
         {
             FindElementByLocator(locator).Click();
 
-            return (TPage)Activator.CreateInstance(typeof(TPage), Driver, Wait)!;
+            return PageFactory.Create<TPage>();
         }
 
         protected TSelf FindAndType(By locator, string text)
