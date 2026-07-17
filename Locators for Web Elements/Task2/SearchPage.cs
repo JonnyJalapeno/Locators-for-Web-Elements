@@ -37,15 +37,34 @@ namespace Locators_for_Web_Elements
         public bool CheckAllLinksForSearchTerm(string phrase)
         {
             ArgumentNullException.ThrowIfNullOrWhiteSpace(phrase);
-            var footer = Driver.FindElement(Footer);
 
-            new Actions(Driver).ScrollToElement(footer).Perform();
-
-            FindElementByLocator(SearchResultMore).Click();
+            ScrollUntilElementDisplayed(SearchResultMore).Click();
 
             var articles = FetchArticles();
 
             return AllArticlesContainPhrase(articles, phrase);
+        }
+
+        protected IWebElement ScrollUntilElementDisplayed(By locator, int scrollStep = 400)
+        {
+            var actions = new Actions(Driver);
+
+            return Wait.Until(driver =>
+            {
+                try
+                {
+                    var element = driver.FindElement(locator);
+                    if (element.Displayed && element.Enabled)
+                    {
+                        return element;
+                    }
+                }
+                catch (NoSuchElementException) { }
+                catch (StaleElementReferenceException) { }
+
+                actions.ScrollByAmount(0, scrollStep).Perform();
+                return null;
+            });
         }
 
         private List<IWebElement> FetchArticles()
