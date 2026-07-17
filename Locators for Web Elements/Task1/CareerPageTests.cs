@@ -23,7 +23,7 @@ namespace Locators_for_Web_Elements
 
         [TestCase("blockchain", "Serbia")]
         //[TestCase("python", "Uzbekistan")]
-        public void Task1(string keyword, string country)
+        public void CareerDescriptionContainsKeyword(string keyword, string country)
         {
             var page = HomePage.AcceptCookies()
             .ClickCareers()

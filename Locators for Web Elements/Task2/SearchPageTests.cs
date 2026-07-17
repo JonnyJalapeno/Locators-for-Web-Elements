@@ -26,7 +26,7 @@ namespace Locators_for_Web_Elements
         [TestCase("BLOCKCHAIN")]
         //[TestCase("Cloud")]
         //[TestCase("Automation")]
-        public void Task2(string s1)
+        public void SearchContainsKeyword(string s1)
         {
             var page = HomePage.AcceptCookies()
             .ClickMagnifierSearch()

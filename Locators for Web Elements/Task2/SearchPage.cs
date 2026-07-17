@@ -41,7 +41,7 @@ namespace Locators_for_Web_Elements
 
             new Actions(Driver).ScrollToElement(footer).Perform();
 
-            Driver.FindElement(SearchResultMore).Click();
+            FindElementByLocator(SearchResultMore).Click();
 
             var articles = FetchArticles();
 
