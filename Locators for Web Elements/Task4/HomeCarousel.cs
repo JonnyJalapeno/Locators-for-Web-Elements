@@ -18,7 +18,6 @@ namespace Locators_for_Web_Elements
 
         private IWebElement Root => Wait.Until(d => d.FindElement(_root));
 
-        // Action — drags the active slide horizontally to trigger a swipe
         public HomeCarousel Swipe(int times = 1)
         {
             const int stepOffset = -25;
@@ -31,9 +30,9 @@ namespace Locators_for_Web_Elements
 
                 var actions = new Actions(Driver)
                     .MoveToElement(slideArea)
-                    .Pause(TimeSpan.FromMilliseconds(100)) // let the hover/position register before mousedown
+                    .Pause(TimeSpan.FromMilliseconds(100)) 
                     .ClickAndHold()
-                    .Pause(TimeSpan.FromMilliseconds(100)); // dwell after mousedown before the drag starts moving
+                    .Pause(TimeSpan.FromMilliseconds(100)); 
 
                 for (int s = 0; s < stepCount; s++)
                 {
@@ -41,7 +40,7 @@ namespace Locators_for_Web_Elements
                 }
 
                 actions
-                    .Pause(TimeSpan.FromMilliseconds(100)) // dwell at the end position before releasing
+                    .Pause(TimeSpan.FromMilliseconds(100)) 
                     .Release()
                     .Build()
                     .Perform();
@@ -64,14 +63,12 @@ namespace Locators_for_Web_Elements
             });
         }
 
-        // Query
         public string GetActiveSlideTitle()
         {
             var titleEl = Root.FindElement(_activeSlide).FindElement(_titleParagraph);
             return NormalizeText(titleEl.Text);
         }
 
-        // Action
         public ArticlePage ClickReadMoreOnActiveSlide()
         {
             var link = Root.FindElement(_activeSlide).FindElement(_readMoreLink);

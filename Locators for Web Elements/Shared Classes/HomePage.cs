@@ -1,18 +1,13 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
-using System.Text.Json;
+
 
 namespace Locators_for_Web_Elements
 {
     public class HomePage :  BaseComponent<HomePage>
     {
-        private struct EpamConfig
-        {
-            public string WebUrl { get; set; }
-        }
         private string WebUrl { get; set; }
-
 
         private readonly By Insights = By.XPath("//nav//a[normalize-space()='Insights']");    
         private readonly By Career = By.LinkText("Careers"); //LinkText locator
@@ -24,31 +19,7 @@ namespace Locators_for_Web_Elements
 
         public HomePage(IWebDriver driver, WebDriverWait wait) : base(driver, wait)
         {
-            EpamConfig config = DeserializeAppSettings();
-            LoadJsonValues(config);
-        }
-
-        private void LoadJsonValues(EpamConfig config)
-        {
-            WebUrl = config.WebUrl;
-        }
-        private static EpamConfig DeserializeAppSettings()
-        {
-            string fileName = "appsettings.json";
-            try
-            {
-                using FileStream openStream = File.OpenRead(fileName);
-                EpamConfig config = JsonSerializer.Deserialize<EpamConfig>(openStream);
-                return config;
-            }
-            catch (FileNotFoundException ex)
-            {
-                throw new InvalidOperationException($"Could not load config file '{fileName}'.", ex);
-            }
-            catch (ArgumentNullException ex)
-            {
-                throw new InvalidOperationException("WebUrl was not set in the config file.", ex);
-            }
+            WebUrl = AppsettingsLoader.GetWebUrl();
         }
 
         public HomePage NavigateToHome()
@@ -69,7 +40,7 @@ namespace Locators_for_Web_Elements
 
         public SearchPage ClickFindButton() => FindAndClick<SearchPage>(FindButton);
 
-        public CodeOfConduct ClickCodeOfConduct()
+        public HomePage ClickCodeOfConduct()
         {
             var element = Driver.FindElement(CodeOfConductLink);
             new Actions(Driver)
@@ -79,7 +50,7 @@ namespace Locators_for_Web_Elements
         .Perform();
 
             element.Click();
-            return new CodeOfConduct(Driver, Wait);
+            return this;
         }
     }
 }

@@ -6,7 +6,6 @@ namespace Locators_for_Web_Elements
 {
     public class CareerPageTests
     {
-
         private HomePage HomePage { get; set; }
         private IWebDriver Driver { get; set; }
 
