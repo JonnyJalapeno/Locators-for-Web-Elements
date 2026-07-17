@@ -10,7 +10,8 @@ namespace Locators_for_Web_Elements
     {
         private string WebUrl { get; set; }
 
-        private readonly By Insights = By.XPath("//nav//a[normalize-space()='Insights']");    
+        private readonly By Insights =
+            By.XPath("//nav//a[contains(@class,'top-navigation__item-link') and normalize-space()='Insights']");
         private readonly By Career = By.LinkText("Careers"); //LinkText locator
         private readonly By MangifierGlass = By.XPath("//button[contains(@class, 'header-search__button')]");
         private readonly By SearchInput = By.Id("new_form_search");
