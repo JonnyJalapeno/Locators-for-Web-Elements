@@ -22,6 +22,26 @@ namespace Locators_for_Web_Elements
             FindElementByLocator(locator).Click();
         }
 
+        public void ClickElementSafely(By locator)
+        {
+            var element = _wait.Until(driver =>
+            {
+                IWebElement candidate;
+                try
+                {
+                    candidate = driver.FindElement(locator);
+                }
+                catch (NoSuchElementException) { return null; }
+                catch (StaleElementReferenceException) { return null; }
+
+                if (!candidate.Displayed || !candidate.Enabled) return null;
+
+                return IsElementOnTop(driver, candidate) ? candidate : null;
+            });
+
+            element.Click();
+        }
+
         public void TypeIntoElement(By locator, string text)
         {
             ArgumentNullException.ThrowIfNullOrWhiteSpace(text);
@@ -131,14 +151,7 @@ namespace Locators_for_Web_Elements
                     if (!element.Displayed || !element.Enabled) return null;
 
                     // Confirm it's actually on top / not covered
-                    var js = (IJavaScriptExecutor)driver;
-                    var isClickable = (bool)js.ExecuteScript(@"
-                        var rect = arguments[0].getBoundingClientRect();
-                        var x = rect.left + rect.width/2, y = rect.top + rect.height/2;
-                        var el = document.elementFromPoint(x, y);
-                        return arguments[0].contains(el);", element);
-
-                    return isClickable ? element : null;
+                    return IsElementOnTop(driver, element) ? element : null;
                 });
 
                 button.Click();
@@ -157,6 +170,26 @@ namespace Locators_for_Web_Elements
             {
                 // Cookie banner not present
             }
+        }
+
+        public bool IsElementOnTop(IWebDriver driver, IWebElement element)
+        {
+            var js = (IJavaScriptExecutor)driver;
+            return (bool)js.ExecuteScript(@"
+                var rect = arguments[0].getBoundingClientRect();
+                var x = rect.left + rect.width/2, y = rect.top + rect.height/2;
+                var el = document.elementFromPoint(x, y);
+                return arguments[0].contains(el);", element);
+        }
+
+        public List<IWebElement> FindContainerAndReturnItsElements(By containerLocator, By elementLocator)
+        {
+            return _wait.Until(driver =>
+            {
+                var container = FindElementByLocator(containerLocator);
+                var articles = FindElementsByLocator(elementLocator, container).ToList();
+                return articles.Count > 0 ? articles : null;
+            });
         }
     }
 }

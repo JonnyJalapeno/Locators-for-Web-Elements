@@ -27,7 +27,7 @@ namespace Locators_for_Web_Elements
         public HomeCarousel Swipe(int times = 1)
         {
             const int stepOffset = -25;
-            const int stepCount = 4;
+            const int stepCount = 6;
 
             for (int i = 0; i < times; i++)
             {
@@ -36,9 +36,7 @@ namespace Locators_for_Web_Elements
 
                 var actions = new Actions(Driver)
                     .MoveToElement(slideArea)
-                    .Pause(TimeSpan.FromMilliseconds(100))
-                    .ClickAndHold()
-                    .Pause(TimeSpan.FromMilliseconds(100));
+                    .ClickAndHold();
 
                 for (int s = 0; s < stepCount; s++)
                 {
@@ -46,27 +44,14 @@ namespace Locators_for_Web_Elements
                 }
 
                 actions
-                    .Pause(TimeSpan.FromMilliseconds(100))
                     .Release()
+                    .Pause(TimeSpan.FromMilliseconds(500))
                     .Build()
                     .Perform();
 
                 Wait.Until(d => GetActiveSlideTitle() != titleBefore);
-                WaitForCarouselToSettle();
             }
             return this;
-        }
-
-        private void WaitForCarouselToSettle()
-        {
-            Wait.Until(d =>
-            {
-                var stage = Root.FindElement(By.CssSelector(".owl-stage"));
-                var styleBefore = stage.GetAttribute("style");
-                System.Threading.Thread.Sleep(150);
-                var styleAfter = stage.GetAttribute("style");
-                return styleBefore == styleAfter;
-            });
         }
 
         public string GetActiveSlideTitle()

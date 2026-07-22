@@ -42,7 +42,7 @@ namespace Locators_for_Web_Elements
 
         public CareerPage ClickTheSearchButton()
         {
-            Interactor.ClickElement(SearchButtonCareerPage);
+            Interactor.ClickElementSafely(SearchButtonCareerPage);
             return this;
         }
 

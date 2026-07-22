@@ -28,12 +28,7 @@ namespace Locators_for_Web_Elements
         public bool CheckLinksForSearchTerm(string phrase)
         {
             ArgumentNullException.ThrowIfNullOrWhiteSpace(phrase);
-            var links = Wait.Until(driver =>
-            {
-                var container = Interactor.FindElementByLocator(SearchResultContainer);
-                var links = Interactor.FindElementsByLocator(ArticleLinks, container).ToList();
-                return links.Count > 0 ? links : null;
-            });
+            var links = Interactor.FindContainerAndReturnItsElements(SearchResultContainer, ArticleLinks);
             return links.All(element => Interactor.ElementContainsPhrase(element, phrase));
         }
 
@@ -51,15 +46,7 @@ namespace Locators_for_Web_Elements
             return AllArticlesContainPhrase(articles, phrase);
         }
 
-        private List<IWebElement> FetchArticles()
-        {
-            return Wait.Until(driver =>
-            {
-                var container = Interactor.FindElementByLocator(SearchResultContainer);
-                var articles = Interactor.FindElementsByLocator(Article, container).ToList();
-                return articles.Count > 0 ? articles : null;
-            });
-        }
+        private List<IWebElement> FetchArticles() => Interactor.FindContainerAndReturnItsElements(SearchResultContainer, Article);
 
         private bool AllArticlesContainPhrase(IEnumerable<IWebElement> articles, string phrase)
         {
