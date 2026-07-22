@@ -14,24 +14,11 @@ namespace Locators_for_Web_Elements
         private readonly By ArticleParagraphs = By.TagName("p");
         private readonly By SearchResultContainer = By.XPath("//div[contains(@class, 'search-results__items')]");
         private readonly By SearchResultMore = By.XPath("//a[contains(@class,'search-results__view-more') and not(contains(concat(' ', normalize-space(@class), ' '), ' hidden '))]");
-        private readonly By Footer = By.XPath("//footer[contains(@class,'search-results__footer')]");
         private readonly By Article = By.XPath("//article[contains(@class, 'search-results__item')]");
 
         public SearchPage(IWebDriver driver, WebDriverWait wait, IPageFactory pageFactory)
             : base(driver, wait, pageFactory)
         {
-        }
-
-        public bool CheckLinksForSearchTerm(string phrase)
-        {
-            ArgumentNullException.ThrowIfNullOrWhiteSpace(phrase);
-            var links = Wait.Until(driver =>
-            {
-                var container = FindElementByLocator(SearchResultContainer);
-                var links = FindElementsByLocator(ArticleLinks, container).ToList();
-                return links.Count > 0 ? links : null;
-            });
-            return links.All(element => ElementContainsPhrase(element, phrase));
         }
 
         public bool CheckAllLinksForSearchTerm(string phrase)
