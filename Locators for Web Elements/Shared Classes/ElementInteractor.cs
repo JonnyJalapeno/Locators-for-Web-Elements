@@ -3,46 +3,34 @@ using OpenQA.Selenium.Support.UI;
 
 namespace Locators_for_Web_Elements
 {
-    public abstract class BaseComponent<TSelf> where TSelf : BaseComponent<TSelf>
+    public class ElementInteractor : IElementInteractor
     {
-        protected readonly IWebDriver Driver;
-        protected readonly WebDriverWait Wait;
-        protected readonly IPageFactory PageFactory;
+        private readonly IWebDriver _driver;
+        private readonly WebDriverWait _wait;
 
         private readonly By PrivacyBanner = By.CssSelector("div[role='dialog'][aria-label='Privacy']");
         private readonly By CookiesAcceptanceLocator = By.Id("onetrust-accept-btn-handler");
 
-        protected BaseComponent(IWebDriver driver, WebDriverWait wait, IPageFactory pageFactory)
+        public ElementInteractor(IWebDriver driver, WebDriverWait wait)
         {
-            Driver = driver;
-            Wait = wait;
-            PageFactory = pageFactory;
+            _driver = driver;
+            _wait = wait;
         }
 
-        protected TSelf FindAndClick(By locator)
-        {
-            FindElementByLocator(locator).Click();
-            return (TSelf)this;
-        }
-
-        protected TPage FindAndClick<TPage>(By locator)
-         where TPage : BaseComponent<TPage>
+        public void ClickElement(By locator)
         {
             FindElementByLocator(locator).Click();
-
-            return PageFactory.Create<TPage>();
         }
 
-        protected TSelf FindAndType(By locator, string text)
+        public void TypeIntoElement(By locator, string text)
         {
             ArgumentNullException.ThrowIfNullOrWhiteSpace(text);
             FindElementByLocator(locator).SendKeys(text);
-            return (TSelf)this;
         }
 
-        protected IWebElement FindElementByLocator(By locator)
+        public IWebElement FindElementByLocator(By locator)
         {
-            return Wait.Until(driver =>
+            return _wait.Until(driver =>
             {
                 try
                 {
@@ -60,9 +48,28 @@ namespace Locators_for_Web_Elements
             });
         }
 
-        protected IEnumerable<IWebElement> FindElementsByLocator(By locator, IWebElement scope)
+        public IWebElement FindPresentElementByLocator(By locator)
         {
-            return Wait.Until(driver =>
+            return _wait.Until(driver =>
+            {
+                try
+                {
+                    return driver.FindElement(locator);
+                }
+                catch (NoSuchElementException)
+                {
+                    return null;
+                }
+                catch (StaleElementReferenceException)
+                {
+                    return null;
+                }
+            });
+        }
+
+        public IEnumerable<IWebElement> FindElementsByLocator(By locator, IWebElement scope)
+        {
+            return _wait.Until(driver =>
             {
                 try
                 {
@@ -80,9 +87,9 @@ namespace Locators_for_Web_Elements
             });
         }
 
-        protected IEnumerable<IWebElement> FindElementsByLocator(By locator)
+        public IEnumerable<IWebElement> FindElementsByLocator(By locator)
         {
-            return Wait.Until(driver =>
+            return _wait.Until(driver =>
             {
                 try
                 {
@@ -100,22 +107,22 @@ namespace Locators_for_Web_Elements
             });
         }
 
-        protected void WaitForUrlToContain(string phrase)
+        public void WaitForUrlToContain(string phrase)
         {
-            Wait.Until(driver =>
+            _wait.Until(driver =>
                 driver.Url.Contains(phrase, StringComparison.OrdinalIgnoreCase));
         }
 
-        protected static bool ElementContainsPhrase(IWebElement element, string phrase)
+        public bool ElementContainsPhrase(IWebElement element, string phrase)
         {
             return element.Text.Contains(phrase, StringComparison.OrdinalIgnoreCase);
         }
 
-        public TSelf AcceptCookies()
+        public void AcceptCookies()
         {
             try
             {
-                var button = Wait.Until(driver =>
+                var button = _wait.Until(driver =>
                 {
                     IWebElement element;
                     try { element = driver.FindElement(CookiesAcceptanceLocator); }
@@ -136,7 +143,7 @@ namespace Locators_for_Web_Elements
 
                 button.Click();
 
-                Wait.Until(driver =>
+                _wait.Until(driver =>
                 {
                     var dialogs = driver.FindElements(PrivacyBanner);
 
@@ -150,7 +157,6 @@ namespace Locators_for_Web_Elements
             {
                 // Cookie banner not present
             }
-            return (TSelf)this;
         }
     }
 }

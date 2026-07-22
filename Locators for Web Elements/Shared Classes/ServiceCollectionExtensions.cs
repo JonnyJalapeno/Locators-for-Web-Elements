@@ -27,6 +27,7 @@ namespace Locators_for_Web_Elements
                 new WebDriverWait(sp.GetRequiredService<IWebDriver>(), TimeSpan.FromSeconds(10)));
 
             services.AddSingleton<IPageFactory, PageFactory>();
+            services.AddSingleton<IElementInteractor, ElementInteractor>();
 
             services.AddTransient<HomePage>();
             services.AddTransient<CareerPage>();

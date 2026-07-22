@@ -4,8 +4,11 @@ using OpenQA.Selenium.Support.UI;
 
 namespace Locators_for_Web_Elements
 {
-    public class HomeCarousel : BaseComponent<HomeCarousel>
+    public class HomeCarousel
     {
+        private readonly IWebDriver Driver;
+        private readonly WebDriverWait Wait;
+        private readonly IPageFactory PageFactory;
 
         private readonly By _root = By.XPath("//div[contains(@class,'slider') and contains(@class,'section')]");
         private readonly By _activeSlide = By.XPath(".//div[contains(@class,'owl-item') and contains(@class,'active')]//div[contains(@class,'single-slide-ui')]");
@@ -13,8 +16,10 @@ namespace Locators_for_Web_Elements
         private readonly By _readMoreLink = By.XPath(".//a[contains(@class,'slider-cta-link')]");
 
         public HomeCarousel(IWebDriver driver, WebDriverWait wait, IPageFactory pageFactory)
-            : base(driver, wait, pageFactory)
         {
+            Driver = driver;
+            Wait = wait;
+            PageFactory = pageFactory;
         }
 
         private IWebElement Root => Wait.Until(d => d.FindElement(_root));
@@ -31,9 +36,9 @@ namespace Locators_for_Web_Elements
 
                 var actions = new Actions(Driver)
                     .MoveToElement(slideArea)
-                    .Pause(TimeSpan.FromMilliseconds(100)) 
+                    .Pause(TimeSpan.FromMilliseconds(100))
                     .ClickAndHold()
-                    .Pause(TimeSpan.FromMilliseconds(100)); 
+                    .Pause(TimeSpan.FromMilliseconds(100));
 
                 for (int s = 0; s < stepCount; s++)
                 {
@@ -41,7 +46,7 @@ namespace Locators_for_Web_Elements
                 }
 
                 actions
-                    .Pause(TimeSpan.FromMilliseconds(100)) 
+                    .Pause(TimeSpan.FromMilliseconds(100))
                     .Release()
                     .Build()
                     .Perform();
@@ -73,7 +78,7 @@ namespace Locators_for_Web_Elements
         public ArticlePage ClickReadMoreOnActiveSlide()
         {
             var link = Root.FindElement(_activeSlide).FindElement(_readMoreLink);
-            Wait.Until(_driver=> { return link.Enabled ? link : null; }).Click();
+            Wait.Until(_driver => { return link.Enabled ? link : null; }).Click();
             return PageFactory.Create<ArticlePage>();
         }
 

@@ -3,13 +3,15 @@ using OpenQA.Selenium.Support.UI;
 
 namespace Locators_for_Web_Elements
 {
-    public class ArticlePage : BaseComponent<ArticlePage>
+    public class ArticlePage
     {
+        private readonly WebDriverWait Wait;
+
         private readonly By _heading = By.CssSelector("h1"); // verify once on real article page
 
-        public ArticlePage(IWebDriver driver, WebDriverWait wait, IPageFactory pageFactory)
-            : base(driver, wait, pageFactory)
+        public ArticlePage(WebDriverWait wait)
         {
+            Wait = wait;
         }
 
         public string GetTitle()
