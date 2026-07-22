@@ -65,7 +65,7 @@ namespace Locators_for_Web_Elements
 
         public CareerPage ExpandJobDescription()
         {
-            Interactor.ClickElement(ExpandJobButton);
+            Interactor.ClickElementSafely(ExpandJobButton);
             return this;
         }
 
