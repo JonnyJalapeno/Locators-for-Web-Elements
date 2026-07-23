@@ -17,6 +17,7 @@ namespace Locators_for_Web_Elements
         private readonly By SearchResultMore = By.XPath("//a[contains(@class,'search-results__view-more') and not(contains(concat(' ', normalize-space(@class), ' '), ' hidden '))]");
         private readonly By Footer = By.XPath("//footer[contains(@class,'search-results__footer')]");
         private readonly By Article = By.XPath("//article[contains(@class, 'search-results__item')]");
+        private readonly By Preloader = By.XPath("//div[contains(@class, 'preloader')]");
 
         public SearchPage(IWebDriver driver, WebDriverWait wait, IElementInteractor interactor)
         {
@@ -46,7 +47,11 @@ namespace Locators_for_Web_Elements
             return AllArticlesContainPhrase(articles, phrase);
         }
 
-        private List<IWebElement> FetchArticles() => Interactor.FindContainerAndReturnItsElements(SearchResultContainer, Article);
+        private List<IWebElement> FetchArticles()
+        {
+            Interactor.WaitForPreloaderToDisappear(Preloader);
+            return Interactor.FindContainerAndReturnItsElements(SearchResultContainer, Article);
+        } 
 
         private bool AllArticlesContainPhrase(IEnumerable<IWebElement> articles, string phrase)
         {

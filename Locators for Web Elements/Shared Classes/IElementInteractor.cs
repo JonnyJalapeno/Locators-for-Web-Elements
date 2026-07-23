@@ -19,5 +19,7 @@ namespace Locators_for_Web_Elements
         bool ElementContainsPhrase(IWebElement element, string phrase);
         bool IsElementOnTop(IWebDriver driver, IWebElement element);
         void AcceptCookies();
+
+        public void WaitForPreloaderToDisappear(By preloaderLocator);
     }
 }

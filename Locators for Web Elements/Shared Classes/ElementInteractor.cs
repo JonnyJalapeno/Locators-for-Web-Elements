@@ -191,5 +191,14 @@ namespace Locators_for_Web_Elements
                 return articles.Count > 0 ? articles : null;
             });
         }
+
+        public void WaitForPreloaderToDisappear(By preloaderLocator)
+        {
+            _wait.Until(driver =>
+            {
+                var preloader = FindPresentElementByLocator(preloaderLocator);
+                return preloader.GetAttribute("class").Contains("hidden");
+            });
+        }
     }
 }
