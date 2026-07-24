@@ -34,10 +34,12 @@ namespace Locators_for_Web_Elements
         }
 
         public bool CheckAllLinksForSearchTerm(string phrase)
-        {
+        {     
             ArgumentNullException.ThrowIfNullOrWhiteSpace(phrase);
+            Interactor.WaitForUrlToContain("search");
+            Interactor.WaitForPreloaderToDisappear(Preloader);
             var footer = Interactor.FindPresentElementByLocator(Footer);
-
+            
             new Actions(Driver).ScrollToElement(footer).Perform();
 
             Interactor.FindElementByLocator(SearchResultMore).Click();
