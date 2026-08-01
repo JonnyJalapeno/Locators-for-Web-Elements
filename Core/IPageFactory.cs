@@ -1,4 +1,4 @@
-namespace Locators_for_Web_Elements
+namespace Locators_for_Web_Elements.Core
 {
     public interface IPageFactory
     {

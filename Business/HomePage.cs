@@ -1,8 +1,9 @@
-﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Interactions;
+using Locators_for_Web_Elements.Core;
 using Microsoft.Extensions.Options;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Interactions;
 
-namespace Locators_for_Web_Elements
+namespace Locators_for_Web_Elements.Business
 {
     public class HomePage
     {
@@ -87,7 +88,7 @@ namespace Locators_for_Web_Elements
 
         public HomePage AcceptCookies()
         {
-            Interactor.AcceptCookies();
+            Interactor.AcceptCookies(CommonLocators.CookiesAcceptButton, CommonLocators.PrivacyDialog);
             return this;
         }
     }

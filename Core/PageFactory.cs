@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Locators_for_Web_Elements
+namespace Locators_for_Web_Elements.Core
 {
     public class PageFactory : IPageFactory
     {

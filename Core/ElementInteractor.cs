@@ -1,29 +1,32 @@
-﻿using OpenQA.Selenium;
+using Microsoft.Extensions.Logging;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 
-namespace Locators_for_Web_Elements
+namespace Locators_for_Web_Elements.Core
 {
     public class ElementInteractor : IElementInteractor
     {
         private readonly IWebDriver _driver;
         private readonly WebDriverWait _wait;
+        private readonly ILogger<ElementInteractor> _logger;
 
-        private readonly By PrivacyBanner = By.CssSelector("div[role='dialog'][aria-label='Privacy']");
-        private readonly By CookiesAcceptanceLocator = By.Id("onetrust-accept-btn-handler");
-
-        public ElementInteractor(IWebDriver driver, WebDriverWait wait)
+        public ElementInteractor(IWebDriver driver, WebDriverWait wait, ILogger<ElementInteractor> logger)
         {
             _driver = driver;
             _wait = wait;
+            _logger = logger;
         }
 
         public void ClickElement(By locator)
         {
+            _logger.LogInformation("Clicking element {Locator}", locator);
             FindElementByLocator(locator).Click();
         }
 
         public void ClickElementSafely(By locator)
         {
+            _logger.LogInformation("Safely clicking element {Locator}", locator);
+
             var element = _wait.Until(driver =>
             {
                 IWebElement candidate;
@@ -45,6 +48,7 @@ namespace Locators_for_Web_Elements
         public void TypeIntoElement(By locator, string text)
         {
             ArgumentNullException.ThrowIfNullOrWhiteSpace(text);
+            _logger.LogInformation("Typing '{Text}' into element {Locator}", text, locator);
             FindElementByLocator(locator).SendKeys(text);
         }
 
@@ -138,14 +142,14 @@ namespace Locators_for_Web_Elements
             return element.Text.Contains(phrase, StringComparison.OrdinalIgnoreCase);
         }
 
-        public void AcceptCookies()
+        public void AcceptCookies(By acceptButtonLocator, By privacyDialogLocator)
         {
             try
             {
                 var button = _wait.Until(driver =>
                 {
                     IWebElement element;
-                    try { element = driver.FindElement(CookiesAcceptanceLocator); }
+                    try { element = driver.FindElement(acceptButtonLocator); }
                     catch (NoSuchElementException) { return null; }
 
                     if (!element.Displayed || !element.Enabled) return null;
@@ -155,10 +159,11 @@ namespace Locators_for_Web_Elements
                 });
 
                 button.Click();
+                _logger.LogInformation("Cookie banner accepted");
 
                 _wait.Until(driver =>
                 {
-                    var dialogs = driver.FindElements(PrivacyBanner);
+                    var dialogs = driver.FindElements(privacyDialogLocator);
 
                     if (dialogs.Count == 0)
                         return true;
@@ -168,7 +173,7 @@ namespace Locators_for_Web_Elements
             }
             catch (WebDriverTimeoutException)
             {
-                // Cookie banner not present
+                _logger.LogInformation("Cookie banner not present");
             }
         }
 

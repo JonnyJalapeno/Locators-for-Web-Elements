@@ -1,9 +1,6 @@
-﻿using OpenQA.Selenium;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using OpenQA.Selenium;
 
-namespace Locators_for_Web_Elements
+namespace Locators_for_Web_Elements.Core
 {
     public interface IElementInteractor
     {
@@ -18,8 +15,7 @@ namespace Locators_for_Web_Elements
         void WaitForUrlToContain(string phrase);
         bool ElementContainsPhrase(IWebElement element, string phrase);
         bool IsElementOnTop(IWebDriver driver, IWebElement element);
-        void AcceptCookies();
-
-        public void WaitForPreloaderToDisappear(By preloaderLocator);
+        void AcceptCookies(By acceptButtonLocator, By privacyDialogLocator);
+        void WaitForPreloaderToDisappear(By preloaderLocator);
     }
 }

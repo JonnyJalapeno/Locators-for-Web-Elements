@@ -1,14 +1,12 @@
-﻿using OpenQA.Selenium;
+using Locators_for_Web_Elements.Core;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
-using OpenQA.Selenium.Support.UI;
-using System.Collections.Generic;
 
-namespace Locators_for_Web_Elements
+namespace Locators_for_Web_Elements.Business
 {
     public class SearchPage
     {
         private readonly IWebDriver Driver;
-        private readonly WebDriverWait Wait;
         private readonly IElementInteractor Interactor;
 
         private readonly By ArticleLinks = By.TagName("a");
@@ -19,10 +17,9 @@ namespace Locators_for_Web_Elements
         private readonly By Article = By.XPath("//article[contains(@class, 'search-results__item')]");
         private readonly By Preloader = By.XPath("//div[contains(@class, 'preloader')]");
 
-        public SearchPage(IWebDriver driver, WebDriverWait wait, IElementInteractor interactor)
+        public SearchPage(IWebDriver driver, IElementInteractor interactor)
         {
             Driver = driver;
-            Wait = wait;
             Interactor = interactor;
         }
 
@@ -34,12 +31,12 @@ namespace Locators_for_Web_Elements
         }
 
         public bool CheckAllLinksForSearchTerm(string phrase)
-        {     
+        {
             ArgumentNullException.ThrowIfNullOrWhiteSpace(phrase);
             Interactor.WaitForUrlToContain("search");
             Interactor.WaitForPreloaderToDisappear(Preloader);
             var footer = Interactor.FindPresentElementByLocator(Footer);
-            
+
             new Actions(Driver).ScrollToElement(footer).Perform();
 
             Interactor.FindElementByLocator(SearchResultMore).Click();
@@ -53,7 +50,7 @@ namespace Locators_for_Web_Elements
         {
             Interactor.WaitForPreloaderToDisappear(Preloader);
             return Interactor.FindContainerAndReturnItsElements(SearchResultContainer, Article);
-        } 
+        }
 
         private bool AllArticlesContainPhrase(IEnumerable<IWebElement> articles, string phrase)
         {

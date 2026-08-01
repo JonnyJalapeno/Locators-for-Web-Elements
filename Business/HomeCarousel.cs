@@ -1,8 +1,9 @@
-﻿using OpenQA.Selenium;
+using Locators_for_Web_Elements.Core;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 
-namespace Locators_for_Web_Elements
+namespace Locators_for_Web_Elements.Business
 {
     public class HomeCarousel
     {

@@ -1,6 +1,7 @@
-﻿using OpenQA.Selenium;
+using Locators_for_Web_Elements.Core;
+using OpenQA.Selenium;
 
-namespace Locators_for_Web_Elements
+namespace Locators_for_Web_Elements.Business
 {
     public class CareerPage
     {
@@ -79,7 +80,7 @@ namespace Locators_for_Web_Elements
 
         public CareerPage AcceptCookies()
         {
-            Interactor.AcceptCookies();
+            Interactor.AcceptCookies(CommonLocators.CookiesAcceptButton, CommonLocators.PrivacyDialog);
             return this;
         }
     }
