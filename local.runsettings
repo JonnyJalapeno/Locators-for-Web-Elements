@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Local/default run settings.
+  No TEST_ENVIRONMENT variable is set here, so ConfigurationFactory only loads
+  the base appsettings.json (Environment.GetEnvironmentVariable("TEST_ENVIRONMENT")
+  returns null, and the optional appsettings.{env}.json load is skipped).
+-->
+<RunSettings>
+  <RunConfiguration>
+    <EnvironmentVariables>
+      <!-- Intentionally empty: leave TEST_ENVIRONMENT unset for the base config. -->
+    </EnvironmentVariables>
+  </RunConfiguration>
+</RunSettings>

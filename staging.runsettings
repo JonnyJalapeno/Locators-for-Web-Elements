@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Staging run settings.
+  Sets TEST_ENVIRONMENT=Staging so ConfigurationFactory layers
+  appsettings.Staging.json on top of appsettings.json.
+-->
+<RunSettings>
+  <RunConfiguration>
+    <EnvironmentVariables>
+      <TEST_ENVIRONMENT>Staging</TEST_ENVIRONMENT>
+    </EnvironmentVariables>
+  </RunConfiguration>
+</RunSettings>

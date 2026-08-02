@@ -23,7 +23,7 @@ namespace Locators_for_Web_Elements.Core
 
             if (_config.Headless)
             {
-                options.AddArgument("--headless=new");
+                options.AddArgument("--headless=new"); //this won't work with EPAM site due to cloudlfare protection
             }
 
             var downloadDirectory = Path.Combine(Directory.GetCurrentDirectory(), _config.DownloadDirectory);
