@@ -17,7 +17,7 @@ namespace Locators_for_Web_Elements.Core
 
             var fileTarget = new FileTarget("file")
             {
-                FileName = "${basedir}/Logs/test-log-${shortdate}.log",
+                FileName = $"${{basedir}}/{config.Logging.LogsDirectory}/test-log-${{shortdate}}.log",
                 Layout = "${longdate} ${level:uppercase=true} ${logger} - ${message} ${exception:format=tostring}"
             };
 

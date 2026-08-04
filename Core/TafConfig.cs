@@ -12,5 +12,6 @@ namespace Locators_for_Web_Elements.Core
     public class LoggingConfig
     {
         public string MinLevel { get; set; } = "Info";
+        public string LogsDirectory { get; set; } = "Logs";
     }
 }
