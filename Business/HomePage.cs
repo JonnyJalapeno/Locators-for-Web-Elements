@@ -21,6 +21,12 @@ namespace Locators_for_Web_Elements.Business
         private readonly By FindButton = By.XPath("//div[contains(@class, 'search-results__action-section')]//button");
         private readonly By CodeOfConductLink =
             By.XPath("//a[contains(normalize-space(.), 'Ethical Conduct')]");
+        private readonly By HamburgerMenuButton =
+            By.CssSelector("button.hamburger-menu__button");
+        private readonly By ServicesMenuToggle =
+            By.XPath("//div[contains(@class,'hamburger-menu__sub-menu-toggle-button') and @aria-label='Services']");
+        private readonly By ArtificialIntelligenceMenuToggle =
+            By.XPath("//div[contains(@class,'hamburger-menu__third-level-sub-menu-toggle-button') and @aria-label='Artificial Intelligence']");
 
         public HomePage(IWebDriver driver, IPageFactory pageFactory, IElementInteractor interactor, IOptions<EpamConfig> config)
         {
@@ -53,6 +59,26 @@ namespace Locators_for_Web_Elements.Business
         {
             Interactor.ClickElement(Career);
             return PageFactory.Create<CareerPage>();
+        }
+
+        public HomePage ClickServices()
+        {
+            Interactor.ClickElementSafely(HamburgerMenuButton);
+            Interactor.ClickElementSafely(ServicesMenuToggle);
+            return this;
+        }
+
+        public ServicesPage SelectServiceCategory(string category)
+        {
+            ArgumentNullException.ThrowIfNullOrWhiteSpace(category);
+
+            Interactor.ClickElementSafely(ArtificialIntelligenceMenuToggle);
+
+            var categoryLocator = By.XPath(
+                $"//ul[contains(@class,'hamburger-menu__third-level-menu')]//a[contains(@class,'hamburger-menu__link') and normalize-space()='{category}']");
+            Interactor.ClickElementSafely(categoryLocator);
+
+            return PageFactory.Create<ServicesPage>();
         }
 
         public HomePage ClickMagnifierSearch()

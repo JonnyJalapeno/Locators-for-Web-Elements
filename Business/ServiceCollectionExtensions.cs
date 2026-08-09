@@ -17,6 +17,7 @@ namespace Locators_for_Web_Elements.Business
             services.AddTransient<InsightsPage>();
             services.AddTransient<ArticlePage>();
             services.AddTransient<HomeCarousel>();
+            services.AddTransient<ServicesPage>();
 
             return services;
         }
