@@ -27,16 +27,25 @@ namespace Locators_for_Web_Elements.Core
             services.Configure<TafConfig>(configuration.GetSection("Taf"));
 
             services.AddSingleton<IBrowserFactory, ChromeBrowserFactory>();
-            services.AddSingleton<IWebDriver>(sp => sp.GetRequiredService<IBrowserFactory>().Create());
 
-            services.AddSingleton(sp =>
+            // Scoped (not Singleton): Reqnroll's native DI integration
+            // (Reqnroll.Microsoft.Extensions.DependencyInjection) builds ONE root
+            // container per test session and resolves a fresh scope per scenario.
+            // Scoped here means each scenario gets its own browser/wait/page-factory
+            // instance. This is also safe for the NUnit suite (TestsBase.cs), which
+            // builds a brand-new root ServiceProvider per test: resolving a Scoped
+            // service directly from a root provider (no explicit child scope)
+            // behaves identically to Singleton for that root's lifetime.
+            services.AddScoped<IWebDriver>(sp => sp.GetRequiredService<IBrowserFactory>().Create());
+
+            services.AddScoped(sp =>
             {
                 var waitSeconds = sp.GetRequiredService<IOptions<TafConfig>>().Value.ExplicitWaitSeconds;
                 return new WebDriverWait(sp.GetRequiredService<IWebDriver>(), TimeSpan.FromSeconds(waitSeconds));
             });
 
-            services.AddSingleton<IPageFactory, PageFactory>();
-            services.AddSingleton<IElementInteractor, ElementInteractor>();
+            services.AddScoped<IPageFactory, PageFactory>();
+            services.AddScoped<IElementInteractor, ElementInteractor>();
             services.AddSingleton<IScreenshotCapturer, ScreenshotCapturer>();
 
             return services;

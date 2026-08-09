@@ -1,5 +1,6 @@
 using Locators_for_Web_Elements.Business;
 using Locators_for_Web_Elements.Core;
+using Microsoft.Extensions.Options;
 using Reqnroll;
 
 namespace Locators_for_Web_Elements.Tests.BDD.StepDefinitions
@@ -10,10 +11,10 @@ namespace Locators_for_Web_Elements.Tests.BDD.StepDefinitions
         private readonly HomePage _homePage;
         private readonly TafConfig _tafConfig;
 
-        public CodeOfConductSteps(HomePage homePage, TafConfig tafConfig)
+        public CodeOfConductSteps(HomePage homePage, IOptions<TafConfig> tafConfigOptions)
         {
             _homePage = homePage;
-            _tafConfig = tafConfig;
+            _tafConfig = tafConfigOptions.Value;
         }
 
         private string DownloadDirectory =>
