@@ -5,13 +5,13 @@ namespace Locators_for_Web_Elements.Tests
         [TestCase("BLOCKCHAIN")]
         //[TestCase("Cloud")]
         //[TestCase("Automation")]
-        public void SearchContainsKeyword(string s1)
+        public void SearchContainsKeyword(string searchWord)
         {
             var page = HomePage.AcceptCookies()
             .ClickMagnifierSearch()
-            .InputPhraseIntoMagnifierSearch(s1)
+            .InputPhraseIntoMagnifierSearch(searchWord)
             .ClickFindButton();
-            Assert.That(page.CheckAllLinksForSearchTerm(s1));
+            Assert.That(page.CheckAllLinksForSearchTerm(searchWord));
         }
     }
 }
