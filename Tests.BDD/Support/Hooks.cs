@@ -33,7 +33,8 @@ namespace Locators_for_Web_Elements.Tests.BDD.Support
             var configuration = ConfigurationFactory.Build();
 
             _services = new ServiceCollection()
-                .AddSeleniumTestServices(configuration)
+                .AddCoreTafServices(configuration)
+                .AddBusinessServices(configuration)
                 .BuildServiceProvider();
 
             _driver = _services.GetRequiredService<IWebDriver>();

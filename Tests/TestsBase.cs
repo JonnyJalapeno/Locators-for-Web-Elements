@@ -28,8 +28,11 @@ namespace Locators_for_Web_Elements.Tests
         [SetUp]
         public void BaseSetUp()
         {
+            var configuration = ConfigurationFactory.Build();
+
             Services = new ServiceCollection()
-                .AddSeleniumTestServices(ConfigurationFactory.Build())
+                .AddCoreTafServices(configuration)
+                .AddBusinessServices(configuration)
                 .BuildServiceProvider();
 
             Driver = Services.GetRequiredService<IWebDriver>();
