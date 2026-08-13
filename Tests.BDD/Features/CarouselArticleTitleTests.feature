@@ -1,4 +1,4 @@
-Feature: Insights carousel article navigation
+Feature: Carousel Article Title Tests
   As a visitor of the EPAM website
   I want the carousel's "Read More" link to open the article for the active slide
   So that the article I land on matches the slide I selected

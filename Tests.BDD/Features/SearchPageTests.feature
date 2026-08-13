@@ -1,4 +1,4 @@
-Feature: Site search
+Feature: Search Page Tests
   As a visitor of the EPAM website
   I want to search the site for a keyword
   So that I can find articles related to that keyword

@@ -18,20 +18,20 @@ namespace Locators_for_Web_Elements.Tests.BDD.Features
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Reqnroll", "3.0.0.0")]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::NUnit.Framework.TestFixtureAttribute()]
-    [global::NUnit.Framework.DescriptionAttribute("Insights carousel article navigation")]
+    [global::NUnit.Framework.DescriptionAttribute("Carousel Article Title Tests")]
     [global::NUnit.Framework.FixtureLifeCycleAttribute(global::NUnit.Framework.LifeCycle.InstancePerTestCase)]
-    public partial class InsightsCarouselArticleNavigationFeature
+    public partial class CarouselArticleTitleTestsFeature
     {
         
         private global::Reqnroll.ITestRunner testRunner;
         
         private static string[] featureTags = ((string[])(null));
         
-        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Features", "Insights carousel article navigation", "  As a visitor of the EPAM website\r\n  I want the carousel\'s \"Read More\" link to o" +
+        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Features", "Carousel Article Title Tests", "  As a visitor of the EPAM website\r\n  I want the carousel\'s \"Read More\" link to o" +
                 "pen the article for the active slide\r\n  So that the article I land on matches th" +
                 "e slide I selected", global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
         
-#line 1 "Carousel.feature"
+#line 1 "CarouselArticleTitleTests.feature"
 #line hidden
         
         [global::NUnit.Framework.OneTimeSetUpAttribute()]
@@ -107,7 +107,7 @@ namespace Locators_for_Web_Elements.Tests.BDD.Features
         
         private static global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages InitializeCucumberMessages()
         {
-            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/Carousel.feature.ndjson", 3);
+            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/CarouselArticleTitleTests.feature.ndjson", 3);
         }
         
         [global::NUnit.Framework.TestAttribute()]

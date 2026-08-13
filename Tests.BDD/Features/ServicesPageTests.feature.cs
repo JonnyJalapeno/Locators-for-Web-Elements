@@ -18,19 +18,20 @@ namespace Locators_for_Web_Elements.Tests.BDD.Features
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Reqnroll", "3.0.0.0")]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::NUnit.Framework.TestFixtureAttribute()]
-    [global::NUnit.Framework.DescriptionAttribute("Site search")]
+    [global::NUnit.Framework.DescriptionAttribute("Services Page Tests")]
     [global::NUnit.Framework.FixtureLifeCycleAttribute(global::NUnit.Framework.LifeCycle.InstancePerTestCase)]
-    public partial class SiteSearchFeature
+    public partial class ServicesPageTestsFeature
     {
         
         private global::Reqnroll.ITestRunner testRunner;
         
         private static string[] featureTags = ((string[])(null));
         
-        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Features", "Site search", "  As a visitor of the EPAM website\r\n  I want to search the site for a keyword\r\n  " +
-                "So that I can find articles related to that keyword", global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
+        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Features", "Services Page Tests", "  As a visitor of the EPAM website\r\n  I want to navigate to a specific service ca" +
+                "tegory from the main navigation\r\n  So that I can review EPAM\'s expertise in that" +
+                " area", global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
         
-#line 1 "Search.feature"
+#line 1 "ServicesPageTests.feature"
 #line hidden
         
         [global::NUnit.Framework.OneTimeSetUpAttribute()]
@@ -104,24 +105,37 @@ namespace Locators_for_Web_Elements.Tests.BDD.Features
             await testRunner.CollectScenarioErrorsAsync();
         }
         
+        public virtual async global::System.Threading.Tasks.Task FeatureBackgroundAsync()
+        {
+#line 6
+  #line hidden
+#line 7
+    await testRunner.GivenAsync("I am on the EPAM home page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 8
+    await testRunner.AndAsync("I accept the cookies banner", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+        }
+        
         private static global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages InitializeCucumberMessages()
         {
-            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/Search.feature.ndjson", 3);
+            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/ServicesPageTests.feature.ndjson", 4);
         }
         
         [global::NUnit.Framework.TestAttribute()]
-        [global::NUnit.Framework.DescriptionAttribute("All search results relate to the searched term")]
-        [global::NUnit.Framework.TestCaseAttribute("BLOCKCHAIN", "0", null)]
-        public async global::System.Threading.Tasks.Task AllSearchResultsRelateToTheSearchedTerm(string searchWord, string @__pickleIndex, string[] exampleTags)
+        [global::NUnit.Framework.DescriptionAttribute("Navigate to a service category via the Services dropdown")]
+        [global::NUnit.Framework.TestCaseAttribute("Generative AI", "0", null)]
+        [global::NUnit.Framework.TestCaseAttribute("Responsible AI", "1", null)]
+        public async global::System.Threading.Tasks.Task NavigateToAServiceCategoryViaTheServicesDropdown(string category, string @__pickleIndex, string[] exampleTags)
         {
             string[] tagsOfScenario = exampleTags;
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
-            argumentsOfScenario.Add("SearchWord", searchWord);
+            argumentsOfScenario.Add("Category", category);
             string pickleIndex = @__pickleIndex;
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("All search results relate to the searched term", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Navigate to a service category via the Services dropdown", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 6
+#line 10
   this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -131,20 +145,20 @@ namespace Locators_for_Web_Elements.Tests.BDD.Features
             else
             {
                 await this.ScenarioStartAsync();
-#line 7
-    await testRunner.GivenAsync("I am on the EPAM home page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
-#line hidden
-#line 8
-    await testRunner.AndAsync("I accept the cookies banner", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-#line 9
-    await testRunner.WhenAsync("I open the site search", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
-#line hidden
-#line 10
-    await testRunner.AndAsync(string.Format("I search for \"{0}\"", searchWord), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line 6
+  await this.FeatureBackgroundAsync();
 #line hidden
 #line 11
-    await testRunner.ThenAsync(string.Format("all search results should relate to \"{0}\"", searchWord), ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+    await testRunner.WhenAsync("I open the \"Services\" navigation menu", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 12
+    await testRunner.AndAsync(string.Format("I select the \"{0}\" service category", category), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 13
+    await testRunner.ThenAsync(string.Format("the page title should contain \"{0}\"", category), ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+#line 14
+    await testRunner.AndAsync("the \"Our Related Expertise\" section should be displayed", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();

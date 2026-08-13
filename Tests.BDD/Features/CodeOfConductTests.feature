@@ -1,4 +1,4 @@
-Feature: Code of Ethical Conduct download
+Feature: Code Of Conduct Tests
   As a visitor of the EPAM website
   I want to download the Code of Ethical Conduct document
   So that I can review EPAM's ethics and compliance policy

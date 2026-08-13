@@ -18,19 +18,19 @@ namespace Locators_for_Web_Elements.Tests.BDD.Features
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Reqnroll", "3.0.0.0")]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::NUnit.Framework.TestFixtureAttribute()]
-    [global::NUnit.Framework.DescriptionAttribute("Code of Ethical Conduct download")]
+    [global::NUnit.Framework.DescriptionAttribute("Career Page Tests")]
     [global::NUnit.Framework.FixtureLifeCycleAttribute(global::NUnit.Framework.LifeCycle.InstancePerTestCase)]
-    public partial class CodeOfEthicalConductDownloadFeature
+    public partial class CareerPageTestsFeature
     {
         
         private global::Reqnroll.ITestRunner testRunner;
         
         private static string[] featureTags = ((string[])(null));
         
-        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Features", "Code of Ethical Conduct download", "  As a visitor of the EPAM website\r\n  I want to download the Code of Ethical Cond" +
-                "uct document\r\n  So that I can review EPAM\'s ethics and compliance policy", global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
+        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Features", "Career Page Tests", "  As a job seeker\r\n  I want to search EPAM careers by keyword, country and workpl" +
+                "ace type\r\n  So that I can find job openings that match my criteria", global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
         
-#line 1 "CodeOfConduct.feature"
+#line 1 "CareerPageTests.feature"
 #line hidden
         
         [global::NUnit.Framework.OneTimeSetUpAttribute()]
@@ -106,17 +106,20 @@ namespace Locators_for_Web_Elements.Tests.BDD.Features
         
         private static global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages InitializeCucumberMessages()
         {
-            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/CodeOfConduct.feature.ndjson", 3);
+            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/CareerPageTests.feature.ndjson", 3);
         }
         
         [global::NUnit.Framework.TestAttribute()]
-        [global::NUnit.Framework.DescriptionAttribute("Downloading the Code of Ethical Conduct PDF")]
-        public async global::System.Threading.Tasks.Task DownloadingTheCodeOfEthicalConductPDF()
+        [global::NUnit.Framework.DescriptionAttribute("Job description contains the searched keyword")]
+        [global::NUnit.Framework.TestCaseAttribute("blockchain", "Serbia", "0", null)]
+        public async global::System.Threading.Tasks.Task JobDescriptionContainsTheSearchedKeyword(string keyword, string country, string @__pickleIndex, string[] exampleTags)
         {
-            string[] tagsOfScenario = ((string[])(null));
+            string[] tagsOfScenario = exampleTags;
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
-            string pickleIndex = "0";
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Downloading the Code of Ethical Conduct PDF", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            argumentsOfScenario.Add("Keyword", keyword);
+            argumentsOfScenario.Add("Country", country);
+            string pickleIndex = @__pickleIndex;
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Job description contains the searched keyword", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
 #line 6
@@ -136,10 +139,28 @@ namespace Locators_for_Web_Elements.Tests.BDD.Features
     await testRunner.AndAsync("I accept the cookies banner", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 9
-    await testRunner.WhenAsync("I click the \"Ethical Conduct\" link", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+    await testRunner.WhenAsync("I go to the Careers page", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 10
-    await testRunner.ThenAsync("the file \"Code-Of-Conduct_01_26.pdf\" should be downloaded", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+    await testRunner.AndAsync("I click \"Search Careers\" on the Careers page", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 11
+    await testRunner.AndAsync("I accept the cookies banner on the Careers page", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 12
+    await testRunner.AndAsync(string.Format("I select \"{0}\" from the country dropdown", country), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 13
+    await testRunner.AndAsync("I filter jobs by \"Remote\" workplace type", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 14
+    await testRunner.AndAsync(string.Format("I search careers for the keyword \"{0}\"", keyword), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 15
+    await testRunner.AndAsync("I expand the job description", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 16
+    await testRunner.ThenAsync(string.Format("the job description should contain the keyword \"{0}\"", keyword), ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();

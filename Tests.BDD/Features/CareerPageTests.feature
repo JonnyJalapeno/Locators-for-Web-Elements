@@ -1,4 +1,4 @@
-Feature: Career search
+Feature: Career Page Tests
   As a job seeker
   I want to search EPAM careers by keyword, country and workplace type
   So that I can find job openings that match my criteria

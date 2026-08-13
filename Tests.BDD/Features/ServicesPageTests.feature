@@ -1,4 +1,4 @@
-Feature: Navigate to Services section
+Feature: Services Page Tests
   As a visitor of the EPAM website
   I want to navigate to a specific service category from the main navigation
   So that I can review EPAM's expertise in that area

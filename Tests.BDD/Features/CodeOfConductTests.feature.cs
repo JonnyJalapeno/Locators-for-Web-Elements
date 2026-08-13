@@ -18,20 +18,19 @@ namespace Locators_for_Web_Elements.Tests.BDD.Features
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Reqnroll", "3.0.0.0")]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::NUnit.Framework.TestFixtureAttribute()]
-    [global::NUnit.Framework.DescriptionAttribute("Navigate to Services section")]
+    [global::NUnit.Framework.DescriptionAttribute("Code Of Conduct Tests")]
     [global::NUnit.Framework.FixtureLifeCycleAttribute(global::NUnit.Framework.LifeCycle.InstancePerTestCase)]
-    public partial class NavigateToServicesSectionFeature
+    public partial class CodeOfConductTestsFeature
     {
         
         private global::Reqnroll.ITestRunner testRunner;
         
         private static string[] featureTags = ((string[])(null));
         
-        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Features", "Navigate to Services section", "  As a visitor of the EPAM website\r\n  I want to navigate to a specific service ca" +
-                "tegory from the main navigation\r\n  So that I can review EPAM\'s expertise in that" +
-                " area", global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
+        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Features", "Code Of Conduct Tests", "  As a visitor of the EPAM website\r\n  I want to download the Code of Ethical Cond" +
+                "uct document\r\n  So that I can review EPAM\'s ethics and compliance policy", global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
         
-#line 1 "ServicesNavigation.feature"
+#line 1 "CodeOfConductTests.feature"
 #line hidden
         
         [global::NUnit.Framework.OneTimeSetUpAttribute()]
@@ -105,37 +104,22 @@ namespace Locators_for_Web_Elements.Tests.BDD.Features
             await testRunner.CollectScenarioErrorsAsync();
         }
         
-        public virtual async global::System.Threading.Tasks.Task FeatureBackgroundAsync()
-        {
-#line 6
-  #line hidden
-#line 7
-    await testRunner.GivenAsync("I am on the EPAM home page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
-#line hidden
-#line 8
-    await testRunner.AndAsync("I accept the cookies banner", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-        }
-        
         private static global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages InitializeCucumberMessages()
         {
-            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/ServicesNavigation.feature.ndjson", 4);
+            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/CodeOfConductTests.feature.ndjson", 3);
         }
         
         [global::NUnit.Framework.TestAttribute()]
-        [global::NUnit.Framework.DescriptionAttribute("Navigate to a service category via the Services dropdown")]
-        [global::NUnit.Framework.TestCaseAttribute("Generative AI", "0", null)]
-        [global::NUnit.Framework.TestCaseAttribute("Responsible AI", "1", null)]
-        public async global::System.Threading.Tasks.Task NavigateToAServiceCategoryViaTheServicesDropdown(string category, string @__pickleIndex, string[] exampleTags)
+        [global::NUnit.Framework.DescriptionAttribute("Downloading the Code of Ethical Conduct PDF")]
+        public async global::System.Threading.Tasks.Task DownloadingTheCodeOfEthicalConductPDF()
         {
-            string[] tagsOfScenario = exampleTags;
+            string[] tagsOfScenario = ((string[])(null));
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
-            argumentsOfScenario.Add("Category", category);
-            string pickleIndex = @__pickleIndex;
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Navigate to a service category via the Services dropdown", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string pickleIndex = "0";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Downloading the Code of Ethical Conduct PDF", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 10
+#line 6
   this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -145,20 +129,17 @@ namespace Locators_for_Web_Elements.Tests.BDD.Features
             else
             {
                 await this.ScenarioStartAsync();
-#line 6
-  await this.FeatureBackgroundAsync();
+#line 7
+    await testRunner.GivenAsync("I am on the EPAM home page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 11
-    await testRunner.WhenAsync("I open the \"Services\" navigation menu", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line 8
+    await testRunner.AndAsync("I accept the cookies banner", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 12
-    await testRunner.AndAsync(string.Format("I select the \"{0}\" service category", category), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line 9
+    await testRunner.WhenAsync("I click the \"Ethical Conduct\" link", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 13
-    await testRunner.ThenAsync(string.Format("the page title should contain \"{0}\"", category), ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
-#line hidden
-#line 14
-    await testRunner.AndAsync("the \"Our Related Expertise\" section should be displayed", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line 10
+    await testRunner.ThenAsync("the file \"Code-Of-Conduct_01_26.pdf\" should be downloaded", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
