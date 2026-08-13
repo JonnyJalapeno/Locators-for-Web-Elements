@@ -112,11 +112,13 @@ namespace Locators_for_Web_Elements.Tests.BDD.Features
         
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("Article title matches the active carousel slide title after swiping")]
-        public async global::System.Threading.Tasks.Task ArticleTitleMatchesTheActiveCarouselSlideTitleAfterSwiping()
+        [global::NUnit.Framework.TestCaseAttribute("3", "0", null)]
+        public async global::System.Threading.Tasks.Task ArticleTitleMatchesTheActiveCarouselSlideTitleAfterSwiping(string swipeTimes, string @__pickleIndex, string[] exampleTags)
         {
-            string[] tagsOfScenario = ((string[])(null));
+            string[] tagsOfScenario = exampleTags;
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
-            string pickleIndex = "0";
+            argumentsOfScenario.Add("swipeTimes", swipeTimes);
+            string pickleIndex = @__pickleIndex;
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Article title matches the active carousel slide title after swiping", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
@@ -140,7 +142,7 @@ namespace Locators_for_Web_Elements.Tests.BDD.Features
     await testRunner.WhenAsync("I navigate to the Insights page", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 10
-    await testRunner.AndAsync("I swipe the carousel 3 times", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.AndAsync(string.Format("I swipe the carousel {0} times", swipeTimes), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 11
     await testRunner.AndAsync("I click \"Read More\" on the active carousel slide", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");

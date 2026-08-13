@@ -7,6 +7,10 @@ Feature: Carousel Article Title Tests
     Given I am on the EPAM home page
     And I accept the cookies banner
     When I navigate to the Insights page
-    And I swipe the carousel 3 times
+    And I swipe the carousel <swipeTimes> times
     And I click "Read More" on the active carousel slide
     Then the article title should match the active slide title
+
+    Examples:
+      | swipeTimes |
+      | 3 |
