@@ -1,13 +1,17 @@
-using Locators_for_Web_Elements.Core;
+using Locators_for_Web_Elements.Business.Api.Models;
+using Locators_for_Web_Elements.Core.Api;
 using Microsoft.Extensions.Logging;
 using RestSharp;
 
-namespace Locators_for_Web_Elements.Business
+namespace Locators_for_Web_Elements.Business.Api
 {
     // Business-layer wrapper around the "/users" resource of
-    // https://jsonplaceholder.typicode.com. Uses the Core IApiClient for
+    // https://jsonplaceholder.typicode.com. Uses Core's IApiClient for
     // transport + logging and Core's RestRequestBuilder (Builder Design
-    // Pattern) to assemble each RestRequest step by step.
+    // Pattern) to assemble each RestRequest step by step. Returns RestSharp's
+    // own RestResponse<T>/RestResponse - this class isn't RestSharp-agnostic
+    // (it references Method/RestRequest directly), it just centralizes
+    // knowledge of the "/users" resource path.
     public class UsersApiClient
     {
         private const string UsersResource = "/users";
@@ -21,7 +25,7 @@ namespace Locators_for_Web_Elements.Business
             _logger = logger;
         }
 
-        public Task<ApiResponse<List<User>>> GetUsersAsync()
+        public Task<RestResponse<List<User>>> GetUsersAsync()
         {
             _logger.LogInformation("Preparing GET request for the list of users");
 
@@ -33,7 +37,7 @@ namespace Locators_for_Web_Elements.Business
             return _apiClient.ExecuteAsync<List<User>>(request, "Get list of users");
         }
 
-        public Task<ApiResponse<CreateUserResponse>> CreateUserAsync(CreateUserRequest newUser)
+        public Task<RestResponse<CreateUserResponse>> CreateUserAsync(CreateUserRequest newUser)
         {
             _logger.LogInformation("Preparing POST request to create user '{Username}'", newUser.Username);
 
@@ -48,7 +52,7 @@ namespace Locators_for_Web_Elements.Business
 
         // Generic GET, used for negative-path checks such as hitting a
         // resource that does not exist.
-        public Task<ApiResponse<object>> GetAsync(string resource)
+        public Task<RestResponse> GetAsync(string resource)
         {
             _logger.LogInformation("Preparing GET request for resource '{Resource}'", resource);
 

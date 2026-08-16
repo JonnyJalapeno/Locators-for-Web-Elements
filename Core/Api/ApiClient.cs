@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using RestSharp;
 
-namespace Locators_for_Web_Elements.Core
+namespace Locators_for_Web_Elements.Core.Api
 {
     // Base API client for the whole TAF. Every API test/business client goes
     // through this class, which guarantees that every outgoing request and
@@ -19,41 +19,20 @@ namespace Locators_for_Web_Elements.Core
             _logger = logger;
         }
 
-        public async Task<ApiResponse<T>> ExecuteAsync<T>(RestRequest request, string actionDescription)
+        public async Task<RestResponse<T>> ExecuteAsync<T>(RestRequest request, string actionDescription)
         {
             LogRequest(request, actionDescription);
             var response = await _client.ExecuteAsync<T>(request);
             LogResponse(response, actionDescription);
-
-            return new ApiResponse<T>
-            {
-                StatusCode = response.StatusCode,
-                IsSuccessful = response.IsSuccessful,
-                Data = response.Data,
-                Content = response.Content,
-                ContentType = response.ContentType,
-                ErrorMessage = response.ErrorMessage,
-                Headers = response.Headers?.ToList() ?? new List<HeaderParameter>(),
-                ContentHeaders = response.ContentHeaders?.ToList() ?? new List<HeaderParameter>()
-            };
+            return response;
         }
 
-        public async Task<ApiResponse<object>> ExecuteAsync(RestRequest request, string actionDescription)
+        public async Task<RestResponse> ExecuteAsync(RestRequest request, string actionDescription)
         {
             LogRequest(request, actionDescription);
             var response = await _client.ExecuteAsync(request);
             LogResponse(response, actionDescription);
-
-            return new ApiResponse<object>
-            {
-                StatusCode = response.StatusCode,
-                IsSuccessful = response.IsSuccessful,
-                Content = response.Content,
-                ContentType = response.ContentType,
-                ErrorMessage = response.ErrorMessage,
-                Headers = response.Headers?.ToList() ?? new List<HeaderParameter>(),
-                ContentHeaders = response.ContentHeaders?.ToList() ?? new List<HeaderParameter>()
-            };
+            return response;
         }
 
         private void LogRequest(RestRequest request, string actionDescription)

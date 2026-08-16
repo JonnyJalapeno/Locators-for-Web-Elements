@@ -1,4 +1,4 @@
-namespace Locators_for_Web_Elements.Business
+namespace Locators_for_Web_Elements.Business.Api.Models
 {
     // Body of a POST https://jsonplaceholder.typicode.com/users request.
     // Built step by step via CreateUserRequestBuilder rather than constructed

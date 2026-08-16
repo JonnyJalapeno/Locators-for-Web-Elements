@@ -1,4 +1,4 @@
-namespace Locators_for_Web_Elements.Business
+namespace Locators_for_Web_Elements.Business.Api.Models
 {
     // Maps to a single entry of https://jsonplaceholder.typicode.com/users
     public class User

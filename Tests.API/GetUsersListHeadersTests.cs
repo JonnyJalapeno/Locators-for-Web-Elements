@@ -1,4 +1,5 @@
 using System.Net;
+using Locators_for_Web_Elements.Core.Api;
 
 namespace Locators_for_Web_Elements.Tests.API
 {

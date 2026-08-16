@@ -1,6 +1,6 @@
 using RestSharp;
 
-namespace Locators_for_Web_Elements.Core
+namespace Locators_for_Web_Elements.Core.Api
 {
     // Builder Design Pattern: lets callers assemble a (potentially complex)
     // RestRequest step by step - resource, method, headers, query/url

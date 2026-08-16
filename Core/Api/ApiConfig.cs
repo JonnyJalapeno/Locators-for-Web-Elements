@@ -1,4 +1,4 @@
-namespace Locators_for_Web_Elements.Core
+namespace Locators_for_Web_Elements.Core.Api
 {
     // Bound from the "Api" section of appsettings.json. Kept generic/agnostic of
     // any particular service under test - the concrete base URL for a given

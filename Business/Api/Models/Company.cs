@@ -1,4 +1,4 @@
-namespace Locators_for_Web_Elements.Business
+namespace Locators_for_Web_Elements.Business.Api.Models
 {
     public class Company
     {

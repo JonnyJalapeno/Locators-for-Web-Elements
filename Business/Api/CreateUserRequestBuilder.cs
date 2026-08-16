@@ -1,4 +1,6 @@
-namespace Locators_for_Web_Elements.Business
+using Locators_for_Web_Elements.Business.Api.Models;
+
+namespace Locators_for_Web_Elements.Business.Api
 {
     // Builder Design Pattern applied at the Business (domain) level: lets a
     // test compose a new-user payload one field at a time - only Name and
