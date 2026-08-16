@@ -21,5 +21,17 @@ namespace Locators_for_Web_Elements.Business
 
             return services;
         }
+
+        // Registers the API-side Business layer (domain models + API
+        // clients). Independent from AddBusinessServices/AddCoreTafServices
+        // above so that pure API test projects don't have to pull in Selenium.
+        public static IServiceCollection AddBusinessApiServices(
+            this IServiceCollection services,
+            IConfiguration configuration)
+        {
+            services.AddTransient<UsersApiClient>();
+
+            return services;
+        }
     }
 }

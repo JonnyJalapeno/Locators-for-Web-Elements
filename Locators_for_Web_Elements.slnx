@@ -3,4 +3,5 @@
   <Project Path="Core/Locators_for_Web_Elements.Core.csproj" Type="fae04ec0-301f-11d3-bf4b-0000f81fe1e7" />
   <Project Path="Tests/Locators_for_Web_Elements.Tests.csproj" Type="fae04ec0-301f-11d3-bf4b-0000f81fe1e7" />
   <Project Path="Tests.BDD/Locators_for_Web_Elements.Tests.BDD.csproj" Type="fae04ec0-301f-11d3-bf4b-0000f81fe1e7" />
+  <Project Path="Tests.API/Locators_for_Web_Elements.Tests.API.csproj" Type="fae04ec0-301f-11d3-bf4b-0000f81fe1e7" />
 </Solution>
