@@ -1,4 +1,5 @@
 using System.Net;
+using System.Threading;
 
 namespace Locators_for_Web_Elements.Tests.API
 {
@@ -6,10 +7,11 @@ namespace Locators_for_Web_Elements.Tests.API
     public class GetInvalidEndpointTests : ApiTestsBase
     {
         [Test]
+        [CancelAfter(10_000)]
         [Description("GET /invalidendpoint returns 404 Not Found")]
-        public async Task GetInvalidEndpoint_ReturnsNotFound()
+        public async Task GetInvalidEndpoint_ReturnsNotFound(CancellationToken cancellationToken)
         {
-            var response = await UsersApiClient.GetAsync("/invalidendpoint");
+            var response = await UsersApiClient.GetAsync("/invalidendpoint", cancellationToken);
 
             Assert.Multiple(() =>
             {

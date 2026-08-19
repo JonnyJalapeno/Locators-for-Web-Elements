@@ -1,3 +1,4 @@
+using System.Threading;
 using Microsoft.Extensions.Logging;
 using RestSharp;
 
@@ -19,18 +20,24 @@ namespace Locators_for_Web_Elements.Core.Api
             _logger = logger;
         }
 
-        public async Task<RestResponse<T>> ExecuteAsync<T>(RestRequest request, string actionDescription)
+        public async Task<RestResponse<T>> ExecuteAsync<T>(
+            RestRequest request,
+            string actionDescription,
+            CancellationToken cancellationToken = default)
         {
             LogRequest(request, actionDescription);
-            var response = await _client.ExecuteAsync<T>(request);
+            var response = await _client.ExecuteAsync<T>(request, cancellationToken);
             LogResponse(response, actionDescription);
             return response;
         }
 
-        public async Task<RestResponse> ExecuteAsync(RestRequest request, string actionDescription)
+        public async Task<RestResponse> ExecuteAsync(
+            RestRequest request,
+            string actionDescription,
+            CancellationToken cancellationToken = default)
         {
             LogRequest(request, actionDescription);
-            var response = await _client.ExecuteAsync(request);
+            var response = await _client.ExecuteAsync(request, cancellationToken);
             LogResponse(response, actionDescription);
             return response;
         }

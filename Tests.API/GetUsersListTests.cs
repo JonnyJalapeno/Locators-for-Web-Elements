@@ -1,4 +1,5 @@
 using System.Net;
+using System.Threading;
 
 namespace Locators_for_Web_Elements.Tests.API
 {
@@ -6,10 +7,11 @@ namespace Locators_for_Web_Elements.Tests.API
     public class GetUsersListTests : ApiTestsBase
     {
         [Test]
+        [CancelAfter(10_000)]
         [Description("GET /users returns 200 OK with users containing all expected fields")]
-        public async Task GetUsers_ReturnsUsersWithExpectedFields()
+        public async Task GetUsers_ReturnsUsersWithExpectedFields(CancellationToken cancellationToken)
         {
-            var response = await UsersApiClient.GetUsersAsync();
+            var response = await UsersApiClient.GetUsersAsync(cancellationToken);
 
             Assert.Multiple(() =>
             {

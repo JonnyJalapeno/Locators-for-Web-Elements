@@ -1,5 +1,6 @@
-using Locators_for_Web_Elements.Business.Api;
 using System.Net;
+using System.Threading;
+using Locators_for_Web_Elements.Business.Api;
 
 namespace Locators_for_Web_Elements.Tests.API
 {
@@ -7,15 +8,16 @@ namespace Locators_for_Web_Elements.Tests.API
     public class CreateUserTests : ApiTestsBase
     {
         [Test]
+        [CancelAfter(10_000)]
         [Description("POST /users with Name and Username returns 201 Created and an ID")]
-        public async Task CreateUser_ReturnsCreatedUserWithId()
+        public async Task CreateUser_ReturnsCreatedUserWithId(CancellationToken cancellationToken)
         {
             var newUser = new CreateUserRequestBuilder()
                 .WithName("John Tester")
                 .WithUsername("john.tester")
                 .Build();
 
-            var response = await UsersApiClient.CreateUserAsync(newUser);
+            var response = await UsersApiClient.CreateUserAsync(newUser, cancellationToken);
 
             Assert.Multiple(() =>
             {

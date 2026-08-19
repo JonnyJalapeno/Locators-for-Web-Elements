@@ -11,28 +11,43 @@ namespace Locators_for_Web_Elements.Tests.API
     // [Test] methods, while spinning up/tearing down the DI container and
     // logging test start/end lives here in one place. Marked with the "API"
     // category so every derived fixture/test automatically inherits it.
+    //
+    // The DI container (and the IRestClient it hands out) is built ONCE per
+    // fixture in [OneTimeSetUp], not per test - IRestClient is backed by
+    // IHttpClientFactory, which is meant to be reused across many calls, not
+    // rebuilt for every single request.
     [Category("API")]
     [Parallelizable(ParallelScope.Self)]
     public abstract class ApiTestsBase
     {
-        protected ServiceProvider Services { get; private set; } = null!;
         protected UsersApiClient UsersApiClient { get; private set; } = null!;
 
+        private ServiceProvider _services = null!;
         private ILogger<ApiTestsBase> _logger = null!;
 
-        [SetUp]
-        public void BaseSetUp()
+        [OneTimeSetUp]
+        public void BaseOneTimeSetUp()
         {
             var configuration = ConfigurationFactory.Build();
 
-            Services = new ServiceCollection()
+            _services = new ServiceCollection()
                 .AddApiCoreServices(configuration)
                 .AddBusinessApiServices(configuration)
                 .BuildServiceProvider();
 
-            UsersApiClient = Services.GetRequiredService<UsersApiClient>();
-            _logger = Services.GetRequiredService<ILogger<ApiTestsBase>>();
+            UsersApiClient = _services.GetRequiredService<UsersApiClient>();
+            _logger = _services.GetRequiredService<ILogger<ApiTestsBase>>();
+        }
 
+        [OneTimeTearDown]
+        public void BaseOneTimeTearDown()
+        {
+            _services.Dispose();
+        }
+
+        [SetUp]
+        public void BaseSetUp()
+        {
             _logger.LogInformation("Starting API test: {TestName}", TestContext.CurrentContext.Test.FullName);
         }
 
@@ -44,8 +59,6 @@ namespace Locators_for_Web_Elements.Tests.API
             _logger.LogInformation(
                 "Finished API test: {TestName} with result {Result}",
                 TestContext.CurrentContext.Test.FullName, testResult);
-
-            Services.Dispose();
         }
     }
 }
