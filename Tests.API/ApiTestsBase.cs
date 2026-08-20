@@ -21,7 +21,7 @@ namespace Locators_for_Web_Elements.Tests.API
     public abstract class ApiTestsBase
     {
         protected UsersApiClient UsersApiClient { get; private set; } = null!;
-
+        protected ApiResourceClient ApiResourceClient { get; private set; } = null!;
         private ServiceProvider _services = null!;
         private ILogger<ApiTestsBase> _logger = null!;
 
@@ -36,6 +36,7 @@ namespace Locators_for_Web_Elements.Tests.API
                 .BuildServiceProvider();
 
             UsersApiClient = _services.GetRequiredService<UsersApiClient>();
+            ApiResourceClient = _services.GetRequiredService<ApiResourceClient>();
             _logger = _services.GetRequiredService<ILogger<ApiTestsBase>>();
         }
 

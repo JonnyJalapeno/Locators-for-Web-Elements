@@ -11,7 +11,7 @@ namespace Locators_for_Web_Elements.Tests.API
         [Description("GET /invalidendpoint returns 404 Not Found")]
         public async Task GetInvalidEndpoint_ReturnsNotFound(CancellationToken cancellationToken)
         {
-            var response = await UsersApiClient.GetAsync("/invalidendpoint", cancellationToken);
+            var response = await ApiResourceClient.GetAsync("/invalidendpoint", cancellationToken);
 
             Assert.Multiple(() =>
             {

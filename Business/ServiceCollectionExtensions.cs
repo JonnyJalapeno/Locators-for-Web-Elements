@@ -31,6 +31,7 @@ namespace Locators_for_Web_Elements.Business
             IConfiguration configuration)
         {
             services.AddTransient<UsersApiClient>();
+            services.AddTransient<ApiResourceClient>();
 
             return services;
         }

@@ -51,16 +51,5 @@ namespace Locators_for_Web_Elements.Business.Api
 
             return _apiClient.ExecuteAsync<User>(request, "Create user", cancellationToken);
         }
-
-        // Generic GET, used for negative-path checks such as hitting a
-        // resource that does not exist.
-        public Task<RestResponse> GetAsync(string resource, CancellationToken cancellationToken = default)
-        {
-            _logger.LogInformation("Preparing GET request for resource '{Resource}'", resource);
-
-            var request = new RestRequest(resource, Method.Get);
-
-            return _apiClient.ExecuteAsync(request, $"GET {resource}", cancellationToken);
-        }
     }
 }
