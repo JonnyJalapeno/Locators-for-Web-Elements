@@ -40,7 +40,7 @@ namespace Locators_for_Web_Elements.Business.Api
             return _apiClient.ExecuteAsync<List<User>>(request, "Get list of users", cancellationToken);
         }
 
-        public Task<RestResponse<CreateUserResponse>> CreateUserAsync(
+        public Task<RestResponse<User>> CreateUserAsync(
             CreateUserRequest newUser,
             CancellationToken cancellationToken = default)
         {
@@ -49,7 +49,7 @@ namespace Locators_for_Web_Elements.Business.Api
             var request = new RestRequest(UsersResource, Method.Post)
                 .AddJsonBody(newUser);
 
-            return _apiClient.ExecuteAsync<CreateUserResponse>(request, "Create user", cancellationToken);
+            return _apiClient.ExecuteAsync<User>(request, "Create user", cancellationToken);
         }
 
         // Generic GET, used for negative-path checks such as hitting a
