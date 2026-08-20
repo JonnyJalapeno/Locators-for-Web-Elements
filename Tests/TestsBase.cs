@@ -5,6 +5,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenQA.Selenium;
 using NUnit.Framework.Interfaces;
+using Locators_for_Web_Elements.Business.UI;
+using Locators_for_Web_Elements.Core.UI;
 
 namespace Locators_for_Web_Elements.Tests
 {

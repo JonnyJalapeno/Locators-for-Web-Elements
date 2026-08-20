@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 
-namespace Locators_for_Web_Elements.Core
+namespace Locators_for_Web_Elements.Core.UI
 {
     public class ChromeBrowserFactory : IBrowserFactory
     {

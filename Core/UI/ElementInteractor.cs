@@ -2,7 +2,7 @@ using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 
-namespace Locators_for_Web_Elements.Core
+namespace Locators_for_Web_Elements.Core.UI
 {
     public class ElementInteractor : IElementInteractor
     {

@@ -1,8 +1,8 @@
-using Locators_for_Web_Elements.Core;
+using Locators_for_Web_Elements.Core.UI;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 
-namespace Locators_for_Web_Elements.Business
+namespace Locators_for_Web_Elements.Business.UI
 {
     public class SearchPage
     {

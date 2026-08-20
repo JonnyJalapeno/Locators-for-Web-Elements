@@ -2,7 +2,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenQA.Selenium;
 
-namespace Locators_for_Web_Elements.Core
+namespace Locators_for_Web_Elements.Core.UI
 {
     public class ScreenshotCapturer : IScreenshotCapturer
     {

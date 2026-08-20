@@ -1,7 +1,7 @@
-using Locators_for_Web_Elements.Core;
+using Locators_for_Web_Elements.Core.UI;
 using OpenQA.Selenium;
 
-namespace Locators_for_Web_Elements.Business
+namespace Locators_for_Web_Elements.Business.UI
 {
     public class CareerPage
     {

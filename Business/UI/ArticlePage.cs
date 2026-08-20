@@ -1,7 +1,7 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 
-namespace Locators_for_Web_Elements.Business
+namespace Locators_for_Web_Elements.Business.UI
 {
     public class ArticlePage
     {

@@ -1,4 +1,4 @@
-using Locators_for_Web_Elements.Business;
+using Locators_for_Web_Elements.Business.UI;
 using Locators_for_Web_Elements.Core;
 using Microsoft.Extensions.Options;
 using Reqnroll;

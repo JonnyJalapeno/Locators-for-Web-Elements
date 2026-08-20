@@ -1,8 +1,8 @@
-using Locators_for_Web_Elements.Core;
+using Locators_for_Web_Elements.Core.UI;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 
-namespace Locators_for_Web_Elements.Business
+namespace Locators_for_Web_Elements.Business.UI
 {
     // Represents a service-category landing page reached from the "Services"
     // navigation dropdown (e.g. /services/artificial-intelligence/generative-ai

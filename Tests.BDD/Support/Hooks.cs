@@ -1,5 +1,5 @@
-using Locators_for_Web_Elements.Business;
-using Locators_for_Web_Elements.Core;
+using Locators_for_Web_Elements.Business.UI;
+using Locators_for_Web_Elements.Core.UI;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
 using Reqnroll;

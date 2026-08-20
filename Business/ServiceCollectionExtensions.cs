@@ -1,4 +1,5 @@
 using Locators_for_Web_Elements.Business.Api;
+using Locators_for_Web_Elements.Business.UI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

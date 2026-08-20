@@ -1,4 +1,4 @@
-using Locators_for_Web_Elements.Business;
+using Locators_for_Web_Elements.Business.UI;
 using Reqnroll;
 
 namespace Locators_for_Web_Elements.Tests.BDD.StepDefinitions
