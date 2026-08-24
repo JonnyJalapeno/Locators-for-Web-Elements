@@ -2,7 +2,7 @@ name: TAF Pipeline
 
 on:
   pull_request:
-    branches: [Module10]
+    branches: [master]
   schedule:
     # Nightly run at 02:00 UTC. Adjust to taste.
     - cron: "0 2 * * *"
