@@ -1,0 +1,142 @@
+name: TAF Pipeline
+
+on:
+  pull_request:
+    branches: [Module10]
+  schedule:
+    # Nightly run at 02:00 UTC. Adjust to taste.
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+    inputs:
+      browser:
+        description: "Browser to run UI tests against"
+        type: choice
+        required: false
+        default: chrome
+        options:
+          - chrome
+          - firefox
+          - edge
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_VERSION: "10.0.x"
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  # workflow_dispatch lets the user pick; PR/schedule runs default to Chrome.
+  SELECTED_BROWSER: ${{ github.event.inputs.browser || 'chrome' }}
+
+jobs:
+  # ---------------------------------------------------------------------
+  # Stage 1: API tests. Always runs first.
+  # ---------------------------------------------------------------------
+  api-tests:
+    name: API Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore
+        run: dotnet restore Locators_for_Web_Elements.slnx
+
+      - name: Run API tests
+        run: >
+          dotnet test Tests.API/Locators_for_Web_Elements.Tests.API.csproj
+          --configuration Release
+          --no-restore
+          --logger "trx;LogFileName=api-results.trx"
+          --results-directory ./TestResults/api
+
+      - name: Publish API test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-test-results
+          path: |
+            TestResults/api/**
+            **/Logs/**
+          if-no-files-found: warn
+          retention-days: 14
+
+  # ---------------------------------------------------------------------
+  # Stage 2: UI tests (NUnit + BDD). Runs after API tests, but is not
+  # gated on their outcome: `if: always()` means this job still runs even
+  # if api-tests failed.
+  # ---------------------------------------------------------------------
+  ui-tests:
+    name: UI Tests (${{ needs.api-tests.result }} API / ${{ github.event.inputs.browser || 'chrome' }})
+    needs: api-tests
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore
+        run: dotnet restore Locators_for_Web_Elements.slnx
+
+      - name: Install Microsoft Edge
+        if: env.SELECTED_BROWSER == 'edge'
+        run: |
+          curl -sSL https://packages.microsoft.com/keys/microsoft.asc | sudo gpg --dearmor -o /usr/share/keyrings/microsoft.gpg
+          echo "deb [arch=amd64 signed-by=/usr/share/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/edge stable main" | sudo tee /etc/apt/sources.list.d/microsoft-edge.list
+          sudo apt-get update
+          sudo apt-get install -y microsoft-edge-stable
+      # Chrome and Firefox come preinstalled on the ubuntu-latest runner image.
+
+      - name: Install Xvfb
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb
+        # Headless mode is intentionally not used here: ChromeBrowserFactory
+        # notes that the target site's Cloudflare protection blocks headless
+        # Chrome/Firefox/Edge, so tests run against a real browser under a
+        # virtual display instead (Taf:Headless stays false).
+
+      - name: Run NUnit UI tests
+        env:
+          Taf__Browser: ${{ env.SELECTED_BROWSER }}
+        run: >
+          xvfb-run --auto-servernum
+          dotnet test Tests/Locators_for_Web_Elements.Tests.csproj
+          --configuration Release
+          --no-restore
+          --logger "trx;LogFileName=ui-nunit-results.trx"
+          --results-directory ./TestResults/ui
+
+      - name: Run BDD UI tests
+        if: always()
+        env:
+          Taf__Browser: ${{ env.SELECTED_BROWSER }}
+        run: >
+          xvfb-run --auto-servernum
+          dotnet test Tests.BDD/Locators_for_Web_Elements.Tests.BDD.csproj
+          --configuration Release
+          --no-restore
+          --logger "trx;LogFileName=ui-bdd-results.trx"
+          --results-directory ./TestResults/ui
+
+      - name: Publish UI test results and screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-test-results-${{ env.SELECTED_BROWSER }}
+          path: |
+            TestResults/ui/**
+            **/Screenshots/**
+            **/Logs/**
+          if-no-files-found: warn
+          retention-days: 14

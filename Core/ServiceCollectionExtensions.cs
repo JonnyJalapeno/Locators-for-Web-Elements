@@ -22,7 +22,9 @@ namespace Locators_for_Web_Elements.Core
 
             services.Configure<TafConfig>(configuration.GetSection("Taf"));
 
-            services.AddSingleton<IBrowserFactory, ChromeBrowserFactory>();
+            // Resolves to Chrome/Firefox/Edge based on TafConfig.Browser (see
+            // BrowserFactoryResolver), instead of being hardcoded to Chrome.
+            services.AddSingleton<IBrowserFactory, BrowserFactoryResolver>();
 
             // Scoped (not Singleton): Reqnroll's native DI integration
             // (Reqnroll.Microsoft.Extensions.DependencyInjection) builds ONE root
