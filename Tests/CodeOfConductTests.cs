@@ -45,7 +45,7 @@ namespace Locators_for_Web_Elements.Tests
             .ClickCodeOfConduct();
 
             bool downloaded = await ValidateFileDownloadedAsync(
-                DownloadDirectory, "Code-Of-Conduct_01_26.pdf");
+                DownloadDirectory, "Code_of_Ethical_Conduct.pdf");
 
             Assert.That(downloaded, Is.True, "Expected PDF was not downloaded within the timeout.");
         }
