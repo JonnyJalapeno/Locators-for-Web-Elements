@@ -3,11 +3,22 @@ name: TAF Pipeline
 on:
   pull_request:
     branches: [master]
+
   schedule:
-    # Nightly run at 02:00 UTC. Adjust to taste.
+    # Nightly run at 02:00 UTC.
     - cron: "0 2 * * *"
+
   workflow_dispatch:
     inputs:
+      environment:
+        description: "Test environment"
+        type: choice
+        required: true
+        default: default
+        options:
+          - default
+          - staging
+
       browser:
         description: "Browser to run UI tests against"
         type: choice
@@ -25,8 +36,13 @@ env:
   DOTNET_VERSION: "10.0.x"
   DOTNET_NOLOGO: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
+
   # workflow_dispatch lets the user pick; PR/schedule runs default to Chrome.
   SELECTED_BROWSER: ${{ github.event.inputs.browser || 'chrome' }}
+
+  # "default" means use only appsettings.json.
+  # "staging" means use appsettings.json + appsettings.staging.json.
+  TEST_ENVIRONMENT: ${{ github.event.inputs.environment == 'default' && '' || github.event.inputs.environment }}
 
 jobs:
   # ---------------------------------------------------------------------
@@ -35,6 +51,7 @@ jobs:
   api-tests:
     name: API Tests
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -67,15 +84,15 @@ jobs:
           retention-days: 14
 
   # ---------------------------------------------------------------------
-  # Stage 2: UI tests (NUnit + BDD). Runs after API tests, but is not
-  # gated on their outcome: `if: always()` means this job still runs even
-  # if api-tests failed.
+  # Stage 2: UI tests (NUnit + BDD).
+  # Runs after API tests, but is not gated on their outcome.
   # ---------------------------------------------------------------------
   ui-tests:
     name: UI Tests (${{ needs.api-tests.result }} API / ${{ github.event.inputs.browser || 'chrome' }})
     needs: api-tests
     if: always()
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -91,20 +108,24 @@ jobs:
       - name: Install Microsoft Edge
         if: env.SELECTED_BROWSER == 'edge'
         run: |
-          curl -sSL https://packages.microsoft.com/keys/microsoft.asc | sudo gpg --dearmor -o /usr/share/keyrings/microsoft.gpg
-          echo "deb [arch=amd64 signed-by=/usr/share/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/edge stable main" | sudo tee /etc/apt/sources.list.d/microsoft-edge.list
+          curl -sSL https://packages.microsoft.com/keys/microsoft.asc | \
+            sudo gpg --dearmor -o /usr/share/keyrings/microsoft.gpg
+
+          echo "deb [arch=amd64 signed-by=/usr/share/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/edge stable main" | \
+            sudo tee /etc/apt/sources.list.d/microsoft-edge.list
+
           sudo apt-get update
           sudo apt-get install -y microsoft-edge-stable
+
       # Chrome and Firefox come preinstalled on the ubuntu-latest runner image.
 
       - name: Install Xvfb
         run: |
           sudo apt-get update
           sudo apt-get install -y xvfb
-        # Headless mode is intentionally not used here: ChromeBrowserFactory
-        # notes that the target site's Cloudflare protection blocks headless
-        # Chrome/Firefox/Edge, so tests run against a real browser under a
-        # virtual display instead (Taf:Headless stays false).
+
+      # Browser runs in headed mode using the Headless value from the
+      # selected appsettings file. Xvfb provides the virtual display.
 
       - name: Run NUnit UI tests
         env:
