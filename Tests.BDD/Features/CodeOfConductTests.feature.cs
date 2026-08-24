@@ -139,7 +139,7 @@ namespace Locators_for_Web_Elements.Tests.BDD.Features
     await testRunner.WhenAsync("I click the \"Ethical Conduct\" link", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 10
-    await testRunner.ThenAsync("the file \"Code-Of-Conduct_01_26.pdf\" should be downloaded", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+    await testRunner.ThenAsync("the file \"Code-Of-Conduct.pdf\" should be downloaded", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
