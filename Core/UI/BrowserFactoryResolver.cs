@@ -4,6 +4,7 @@ using OpenQA.Selenium;
 
 namespace Locators_for_Web_Elements.Core.UI
 {
+    // CI trigger test
     // Picks the concrete IBrowserFactory based on TafConfig.Browser (bound from
     // "Taf:Browser", overridable via the TAF__BROWSER env var so CI can select
     // it per run) and delegates to it. Registered in place of a single
