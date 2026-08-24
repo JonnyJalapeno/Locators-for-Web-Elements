@@ -7,4 +7,4 @@ Feature: Code Of Conduct Tests
     Given I am on the EPAM home page
     And I accept the cookies banner
     When I click the "Ethical Conduct" link
-    Then the file "Code-Of-Conduct_01_26.pdf" should be downloaded
+    Then the file "Code-Of-Conduct.pdf" should be downloaded
