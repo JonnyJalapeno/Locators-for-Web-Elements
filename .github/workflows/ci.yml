@@ -41,7 +41,9 @@ env:
   SELECTED_BROWSER: ${{ github.event.inputs.browser || 'chrome' }}
 
   # "default" means use only appsettings.json.
-  # "staging" means use appsettings.json + appsettings.staging.json.
+  # "staging" means use appsettings.json + appsettings.Staging.json.
+  # ConfigurationFactory resolves the override filename case-insensitively,
+  # so the exact casing passed here doesn't need to match the file on disk.
   TEST_ENVIRONMENT: ${{ github.event.inputs.environment == 'default' && '' || github.event.inputs.environment }}
 
 jobs:
