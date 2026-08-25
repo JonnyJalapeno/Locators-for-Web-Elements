@@ -121,19 +121,10 @@ jobs:
 
       # Chrome and Firefox come preinstalled on the ubuntu-latest runner image.
 
-      - name: Install Xvfb
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y xvfb
-
-      # Browser runs in headed mode using the Headless value from the
-      # selected appsettings file. Xvfb provides the virtual display.
-
       - name: Run NUnit UI tests
         env:
           Taf__Browser: ${{ env.SELECTED_BROWSER }}
         run: >
-          xvfb-run --auto-servernum
           dotnet test Tests/Locators_for_Web_Elements.Tests.csproj
           --configuration Release
           --no-restore
@@ -145,7 +136,6 @@ jobs:
         env:
           Taf__Browser: ${{ env.SELECTED_BROWSER }}
         run: >
-          xvfb-run --auto-servernum
           dotnet test Tests.BDD/Locators_for_Web_Elements.Tests.BDD.csproj
           --configuration Release
           --no-restore
